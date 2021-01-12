@@ -141,10 +141,24 @@ class HomeController extends Controller
         Excel::import(new UsersImport, $file);
         return back()->with('message','Importancion de usuarios completa');
     }
-
-    public function ListaUsuarios()
+    //cargamos la vista del los alumnos
+    public function ListaUsuarios(Request $request)
     {
+        if($request->ajax()) 
+        {
+            $persona=new personas();
+            $id=auth()->user()->id;
+            $alumnos=$persona->listaAlumnos($id);
+            return $alumnos;
+        }
         return view('profesor.Listausuarios');
+    }
+
+    public function getAlumnos()
+    {
+        $persona=new personas();
+        $alumnos=$persona->listaAlumnos(auth()->user()->id);
+        dd($alumnos);
     }
 
     

@@ -16,4 +16,5 @@ class grado_primaria extends Model
     {
         return $this->hasMany(temas::class);
     }
+    
 }
