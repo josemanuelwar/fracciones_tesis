@@ -34,4 +34,34 @@ class personas extends Model
         return $alumno;
     }
 
+    public function Alumno($var)
+    {
+        $alumno = DB::table('personas')
+                    ->join('users', 'personas.id', '=', 'users.persona')
+                    ->where('personas.id',$var)
+                    ->select('personas.id', 'personas.Nombre','personas.App',
+                    'personas.Apm','personas.Apm','personas.Direccion','personas.Escuela','users.email')
+                    ->get();
+         return $alumno;           
+    }
+
+    public function UpdateAlumnos($data,$id,$dato)
+    {
+        
+        $respuesta=0;
+        $atulizarpersonas=DB::table('personas')
+                        ->where('personas.id',$id)
+                        ->update($data);
+            
+        $Acusrer=DB::table('users')
+                ->where('users.persona',$id)
+                ->update($dato);
+        
+        if($atulizarpersonas === 1 || $Acusrer === 1){
+            return $respuesta;
+        }
+          return $respuesta;       
+    
+    }
+
 }

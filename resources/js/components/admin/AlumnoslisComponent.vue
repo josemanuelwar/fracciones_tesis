@@ -37,14 +37,40 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-primary">Editar</button>
-                                <button type="button" class="btn btn-danger">Eliminar</button>
+                                <a :href="urlEditar+lista.id" class="btn btn-primary">Editar</a>
+                                <button type="button" class="btn btn-danger" id="show-modal" @click="Eliminar(lista.id)">Eliminar</button>
                                 <!-- <button type="button" class="btn btn-secondary">Right</button> -->
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+            <!-- modal -->
+            <modal name="example" :width="300" :height="250" :adaptive="true">
+                 <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Eliminar</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="canselar()">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Seguro de Eliminar a este usuario ?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="enviarEliminar()">Aceptar</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" @click="canselar()">Canselar</button>
+                        </div>
+                    </div>
+                 </div>       
+            </modal>
+            <!-- fin del modal -->
+
+
+
+
         </div>
     </div>
 </template>
@@ -54,6 +80,9 @@
         data(){
           return{
               lisalum:[],
+              urlEditar:'/EditarAulm/',
+              showModal:false,
+              idusaurio:0,
           } 
         },
         methods:{
@@ -62,16 +91,34 @@
                 let url='/Lista-alumno';
                 axios.get(url).then(function(response){
                     me.lisalum=response.data;
-                    console.log(me.lisalum);
+                    // console.log(me.lisalum);
                 })
                 .catch(function(error){
                     console.log(error);
                 });
+            },
+            Eliminar(id){
+                let me=this;
+                me.idusaurio=id;
+                this.$modal.show('example');  
+            },
+            canselar(){
+                this.$modal.hide('example');
+            },
+            enviarEliminar(){
+                let met=this;
+                axios.get().then(function(response){
+
+                }).catch(function(error){
+                    console.log(error);
+                });
+                 console.log("holas");   
             }
         },
         mounted() {
             this.getlistalumno();
-            console.log('Component mounted.')
+            // this.$modal.show('example');
+            // console.log('Component mounted.')
         }
     }
 </script>

@@ -14,8 +14,8 @@
                 @csrf
                 <div class="form-group">
                     <label for="nombre">Nombre del alumno</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" placeholder="Ingresa el nombre">
-                    {!! $errors->first('nombre','<br><small id="nombreHelp" class="alert alert-danger">:message</small>') !!}
+                    <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" placeholder="Ingresa el nombre" value="{{$alumnos->Nombre}}">
+                       {!! $errors->first('nombre','<br><small id="nombreHelp" class="alert alert-danger">:message</small>') !!}
                 </div>
                 <div class="form-group">
                     <label for="app">Apellido Paterno</label>

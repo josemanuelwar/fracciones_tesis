@@ -34,7 +34,9 @@ Route::get('/importar-excel',[App\Http\Controllers\HomeController::class, 'Formu
 Route::post('/importar-excel',[App\Http\Controllers\HomeController::class, 'ImportarExel'])->name('importar-excel');
 //ruta para mostra la lista de alumnos al profesor
 Route::get('/Lista-alumno',[App\Http\Controllers\HomeController::class, 'ListaUsuarios'])->name('ListaAlum');
-
+//ruta para cargar el formulario para editar 
+Route::get('/EditarAulm/{id}',[App\Http\Controllers\HomeController::class, 'editarview'])->name('EditarAlum');
+Route::post('/Actulizar',[App\Http\Controllers\HomeController::class, 'editarAlumnos'])->name("actulizar_alumnos");
 //rutas para vue
 Route::get('/lista',[App\Http\Controllers\HomeController::class, 'ListaGardosVue']);
 Route::get('/listaTemas',[App\Http\Controllers\HomeController::class, 'verListatemas']);

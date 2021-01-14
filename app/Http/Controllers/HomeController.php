@@ -153,12 +153,59 @@ class HomeController extends Controller
         }
         return view('profesor.Listausuarios');
     }
-
-    public function getAlumnos()
+    //cargamos el formulario editar de usuarios
+    public function editarview(Request $request, $id)
     {
         $persona=new personas();
-        $alumnos=$persona->listaAlumnos(auth()->user()->id);
-        dd($alumnos);
+        $alumnos=$persona->Alumno($id);
+        return view('profesor.Editarusuarios')->with('alumnos',$alumnos)->with('id',$id);
+    }
+
+    public function editarAlumnos(Request $request)
+    {
+        # code...
+        $validacion=$request->validate([
+            'nombre' => 'required|max:60',
+            'app' => 'required|max:60',
+            'apm' => 'required|max:60',
+            'direccion' => 'required|max:120',
+            'Escuela' => 'required|max:60',
+            'email' => 'required|max:60|email',
+            'id'=>'required|max:11'
+            ]);
+        $datos=array('Nombre'=>$request->post('nombre'),
+                    'App'=>$request->post('app'),
+                    'Apm'=>$request->post('apm'),
+                    'Direccion'=>$request->post('direccion'),
+                    'Escuela'=>$request->post('Escuela'));
+        if($request->post('password1') != null)
+        {            
+            $data = array(
+            'nombre_usuario' =>$request->post('nombre'),  
+            'email'=>$request->post('email'),
+            'password'=>$request->post('password1'));
+        }
+        else
+        {
+            $data = array(
+                'nombre_usuario' => $request->post('nombre'),
+                'email'=>$request->post('email'));
+        }    
+
+        $id=$request->post('id');
+        $persona=new personas(); 
+        $update=$persona->UpdateAlumnos($datos,$id,$data); 
+        if($update){
+            return back()->with('success','Datos Actulizados correctamente');
+        }else{
+            return back()->with('message','Error en Actulizar los datos');
+        }                  
+        // dd($datos);
+    }
+    
+    public function EliminarUsuario(Request $request)
+    {
+        
     }
 
     
