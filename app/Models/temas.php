@@ -20,5 +20,4 @@ class temas extends Model
         return $this->hasOne(grado_primaria::class);
     }
 
-
 }

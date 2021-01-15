@@ -41,4 +41,5 @@ Route::post('/Actulizar',[App\Http\Controllers\HomeController::class, 'editarAlu
 Route::get('/lista',[App\Http\Controllers\HomeController::class, 'ListaGardosVue']);
 Route::get('/listaTemas',[App\Http\Controllers\HomeController::class, 'verListatemas']);
 Route::post('/guardarTemas',[App\Http\Controllers\HomeController::class, 'guardarTemas']);
-Route::get('/listatemasgrado',[App\Http\Controllers\HomeController::class, 'ListaTemas']);
+Route::get('/listatemasgrado/{id}',[App\Http\Controllers\HomeController::class, 'ListaTemas']);
+Route::post('/EditarTema',[App\Http\Controllers\HomeController::class,'EditarTema']);

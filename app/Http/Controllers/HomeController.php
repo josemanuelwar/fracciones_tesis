@@ -119,12 +119,10 @@ class HomeController extends Controller
         return view('profesor.agregarpreguntas');
     }
 
-    public function ListaTemas()
+    public function ListaTemas($id)
     {
-        $validacion=$request->validate([
-            'idgrado' => 'required|max:60',
-        ]);
-        return json_encode("holas");
+        $temas=temas::where('grado_primaria_id',$id)->get();
+            return json_encode($temas);    
     }
     /** solo cargar la vista del formulario para el exel */
     public function FormulariocargarExel()
@@ -206,6 +204,24 @@ class HomeController extends Controller
     public function EliminarUsuario(Request $request)
     {
         
+    }
+
+    public function EditarTema(Request $request)
+    {
+        if($request->ajax()) 
+        {
+            $validacion=$request->validate([
+                'idtema'=>'required|max:60',
+                'tema'=>'required|max:60',
+                'idgardo'=>'required|max:60'
+            ]);
+            $id=$request->post('idtema');
+            $data = array('nombre_tema' => $request->post('tema'),
+                        'usuario_id'=>auth()->user()->id,
+                    'grado_primaria_id'=>$request->post('idgardo'));
+             $resu=temas::where('id',$id)->update($data);
+            return json_encode($resu);
+        }        
     }
 
     

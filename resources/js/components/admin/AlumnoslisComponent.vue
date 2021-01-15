@@ -67,10 +67,6 @@
                  </div>       
             </modal>
             <!-- fin del modal -->
-
-
-
-
         </div>
     </div>
 </template>
@@ -91,7 +87,6 @@
                 let url='/Lista-alumno';
                 axios.get(url).then(function(response){
                     me.lisalum=response.data;
-                    // console.log(me.lisalum);
                 })
                 .catch(function(error){
                     console.log(error);
@@ -111,14 +106,11 @@
 
                 }).catch(function(error){
                     console.log(error);
-                });
-                 console.log("holas");   
+                });  
             }
         },
         mounted() {
             this.getlistalumno();
-            // this.$modal.show('example');
-            // console.log('Component mounted.')
         }
     }
 </script>

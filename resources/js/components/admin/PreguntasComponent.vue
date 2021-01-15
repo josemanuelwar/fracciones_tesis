@@ -16,14 +16,19 @@
                 <div class="mb-3">
                     <label for="tema" class="form-label">Selecionar tema</label>
                     <select name="tema" id="tema" class= "form-control">
-                        <option></option>
+                        <option v-if="listatemas.length === 0">
+                            no hay Temas
+                        </option>
+                        <option v-for="(item, index) in listatemas" :key="index" v-bind:value="item.id">
+                            {{item.nombre_tema}}
+                        </option>
                     </select>
                 </div>
 
                 <div class="mb-3">
                     <label for="preguntas" class="form-label">Ingresa la Preguntas</label>
                     <!-- <textarea id="preguntas" name="preguntas" class="form-control"></textarea> -->
-                    <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+                    <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" style="height=200px;"></ckeditor>
                 </div>
 
                 <div class="mb-3">
@@ -49,7 +54,7 @@
 </template>
 <script>
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    
+    // import MathType from '@wiris/mathtype-ckeditor5';
     export default {
         data(){
             return{
@@ -58,9 +63,12 @@
                 idtema:0,
                 audio:"",
                 preguntas:"",
+                listatemas:[],
                 editor: ClassicEditor,
                 editorData: '<p>Content of the editor.</p>',
-                editorConfig: {      
+                editorConfig: { 
+                    // plugins: [ MathType],
+                    // toolbar: [ 'MathType', 'ChemType', ... ]     
                 }
             }    
         },
@@ -71,7 +79,7 @@
                 axios.get(url).then(function (response) {
                         //creamos un array y guardamos el contenido que nos devuelve el response
                         me.listagardos = response.data;
-                        console.log(me.listagardos);
+                        // console.log(me.listagardos);
                     })
                     .catch(function (error) {
                         // handle error
@@ -80,9 +88,10 @@
             },
             signalChange(){
                 let me=this;
-                let url='/listatemasgrado';
-                axios.get(url,{'idgrado':me.idgrado}).then(function(response) {
-                    console.log(response.data);
+                let url='/listatemasgrado/'+me.idgrado;
+                axios.get(url).then(function(response) {
+                    me.listatemas=response.data;
+                    console.log(me.listatemas);
                 }).catch(function (error){
                       console.log(error);  
                 });

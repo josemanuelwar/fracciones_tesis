@@ -10,6 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
+        "@ckeditor/ckeditor5-alignment": "^24.0.0",
         "axios": "^0.21.1",
         "bootstrap": "^4.0.0",
         "cross-env": "^7.0",
@@ -31,6 +32,7 @@
         "@ckeditor/ckeditor5-paragraph": "^24.0.0",
         "@ckeditor/ckeditor5-vue": "^2.0.1",
         "@ckeditor/ckeditor5-vue2": "^1.0.5",
+        "@wiris/mathtype-ckeditor5": "^7.24.4",
         "vue-js-modal": "^2.0.0-rc.6",
         "vue-paginate": "^3.6.0"
     }
