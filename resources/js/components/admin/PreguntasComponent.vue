@@ -4,7 +4,7 @@
            <h1>Preguntas</h1>
         </div>
         <div class="card-body">
-            <form action="">
+            <form method="post"@submit="guardarpregunta">
                 <div class="mb-3">
                     <label for="grado" class="form-label">Selecionar grados</label>
                     <select name="grado" id="grado" class= "form-control" v-model="idgrado" v-on:change="signalChange">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="tema" class="form-label">Selecionar tema</label>
-                    <select name="tema" id="tema" class= "form-control">
+                    <select name="tema" id="tema" class= "form-control" v-model="idtema">
                         <option v-if="listatemas.length === 0">
                             no hay Temas
                         </option>
@@ -33,7 +33,7 @@
 
                 <div class="mb-3">
                     <label for="audio" class="form-label">Selecciona Audio o Video</label>
-                    <input type="file" id="audio" name="audio" class="form-control">
+                    <input type="file"  name="image" @change="getImage" accept="image/*">
                 </div>
                 <input type="submit"  value="Guardar">
             </form>
@@ -60,7 +60,7 @@
             return{
                 idgrado:1,
                 listagardos:[],
-                idtema:0,
+                idtema:1,
                 audio:"",
                 preguntas:"",
                 listatemas:[],
@@ -95,6 +95,30 @@
                 }).catch(function (error){
                       console.log(error);  
                 });
+            },
+            getImage(even){
+                let me=this;
+                me.audio=even.target.files[0];
+            },
+            guardarpregunta(e){
+                e.preventDefault();
+
+                let me=this;
+                let url='/GuardarPreguntas';
+                let data = new FormData();
+                data.append('imagen',me.audio);
+                data.append('idtema',me.idtema);
+                data.append('pregunta',me.editorData);
+                axios.post(url,data).then(
+                    response =>{
+                        console.log(response.data);
+                    }
+                ).catch(
+                    error => {
+                        console.log(error);
+                    }
+                );
+                console.log(data);
             }
 
         },

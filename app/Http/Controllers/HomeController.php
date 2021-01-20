@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\personas;
 use App\Models\grado_primaria;
 use App\Models\temas;
+use App\Models\preguntas;
 use Illuminate\Support\Facades\Hash;
 use App\Imports\UsersImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,6 +23,7 @@ class HomeController extends Controller
     {
         $this->middleware(['auth','roles']);
     }
+
 
     /**
      * Show the application dashboard.
@@ -205,7 +207,9 @@ class HomeController extends Controller
     {
         
     }
-
+    /**
+     * Editamos los temas si se equivocal en la siganacion
+     */
     public function EditarTema(Request $request)
     {
         if($request->ajax()) 
@@ -222,6 +226,24 @@ class HomeController extends Controller
              $resu=temas::where('id',$id)->update($data);
             return json_encode($resu);
         }        
+    }
+
+    public function GuardarPreguntas(Request $request)
+    {
+        $pregun= new preguntas();
+        
+        $pregun->pregunta=$request->post('pregunta');
+        if($request->hasFile('imagen'))
+        {
+            $pregun->urlimage=$request->file('imagen')->store('public');
+        }
+        $pregun->id_temas=$request->post('idtema');
+        $pregun->save();
+        
+       
+            return json_encode("holas");
+        
+        
     }
 
     

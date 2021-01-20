@@ -57,14 +57,6 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="small mb-1" for="escuela">Escuela</label>
-                                                        <input class="form-control py-4" id="escuela" name="escuela" type="text" placeholder="ejem. OCTAVIO PAZ" required/>
-                                                        <br>
-                                                        {!! $errors->first('escuela','<small class="alert alert-danger">:message</small>') !!}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
                                                         <label class="small mb-1" for="nikename">Nombre de usuario</label>
                                                         <input class="form-control py-4" id="nikename" name="nikename" type="text" placeholder="ejem. Sasuke" required/>
                                                         <br>

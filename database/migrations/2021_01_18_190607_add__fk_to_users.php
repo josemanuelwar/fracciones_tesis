@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGradoPrimariasTable extends Migration
+class AddFkToUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateGradoPrimariasTable extends Migration
      */
     public function up()
     {
-        Schema::create('grado_primarias', function (Blueprint $table) {
-            $table->id();
-            $table->string("nombregrado");
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            //
+            $table->unsignedBigInteger("escuelas_id")->after('users_id')->nullable();
+            $table->foreign("escuelas_id")->references('id')->on("escuelas");
         });
     }
 
@@ -27,6 +27,8 @@ class CreateGradoPrimariasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('grado_primarias');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 }

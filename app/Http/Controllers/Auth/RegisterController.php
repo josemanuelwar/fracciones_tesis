@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
-use App\Models\personas;
+use App\Models\Persona;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -56,7 +56,6 @@ class RegisterController extends Controller
             'app' => ['required', 'string', 'max:255'],
             'apm' => ['required', 'string', 'max:255'],
             'direccion' => ['required', 'string', 'max:255'],
-            'escuela' => ['required', 'string', 'max:255'],
             'nikename' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
@@ -72,22 +71,21 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
 
-        $usuarios = new personas;
-        $usuarios->Nombre = $data['nombre'];
-        $usuarios->App = $data['app'];
-        $usuarios->Apm = $data['apm'];
-        $usuarios->Direccion = $data['direccion'];
-        $usuarios->Escuela = $data['escuela'];
+        $usuarios = new Persona;
+        $usuarios->nombrecompleto = $data['nombre'];
+        $usuarios->apellido_paterno = $data['app'];
+        $usuarios->apellido_materno = $data['apm'];
+        $usuarios->direccion = $data['direccion'];
         $usuarios->save();
 
-        $idpersona = personas::latest('id')->first();
+        $idpersona = Persona::latest('id')->first();
         //  var_dump($idpersona);die;   
         return User::create([
             'nombre_usuario' => $data['nikename'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'rol' => 2,
-            'persona' => $idpersona['id']
+            'roles_id' => 2,
+            'personas_id' => $idpersona['id']
         ]);
     }
 }

@@ -16,11 +16,11 @@ class checkRoles
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->user()->rol === 2){
+        if(auth()->user()->roles_id === 2){
             return $next($request);
-        }elseif(auth()->user()->rol === 1){
+        }elseif(auth()->user()->roles_id === 1){
             redirect("/");
-        }elseif(auth()->user()->rol === 3){
+        }elseif(auth()->user()->roles_id === 3){
             redirect("/");
         }
         return redirect("/");

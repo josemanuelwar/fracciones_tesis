@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class grado_primaria extends Model
+class Persona extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nombregrado'
+        'nombrecompleto',
+        'apellido_paterno',
+        'apellido_materno',
+        'direccion',
     ];
 
-    public function temas()
-    {
-        return $this->hasMany(temas::class);
-    }
-    
 }

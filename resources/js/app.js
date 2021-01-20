@@ -15,6 +15,7 @@ Vue.component('temario-component', require('./components/AgregartemarioComponet.
 Vue.component('lista-component',require('./components/ListatemarioComponents.vue').default);
 Vue.component('pregunta-component',require('./components/admin/PreguntasComponent.vue').default);
 Vue.component('alumno-component',require('./components/admin/AlumnoslisComponent.vue').default);
+Vue.component('escuela-component',require('./components/admin/RegistarEscuelaComponent.vue').default);
 // Vue.component('alumnos-component',require('./components/admin/listaalumnosComponent.vue').default);
 const app = new Vue({
     el: '#app',

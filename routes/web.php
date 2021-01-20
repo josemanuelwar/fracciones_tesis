@@ -2,17 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -43,3 +32,9 @@ Route::get('/listaTemas',[App\Http\Controllers\HomeController::class, 'verListat
 Route::post('/guardarTemas',[App\Http\Controllers\HomeController::class, 'guardarTemas']);
 Route::get('/listatemasgrado/{id}',[App\Http\Controllers\HomeController::class, 'ListaTemas']);
 Route::post('/EditarTema',[App\Http\Controllers\HomeController::class,'EditarTema']);
+Route::post('/GuardarPreguntas',[App\Http\Controllers\HomeController::class,'GuardarPreguntas']);
+
+Route::get('/RegisrarEscuela', [App\Http\Controllers\ProfesorController::class, 'index'])->name('Escuela');
+Route::post('/GuardarEscuela', [App\Http\Controllers\ProfesorController::class, 'GaudarEscuela'])->name('guardar_escuela');
+Route::get('/listaEscuela',[App\Http\Controllers\ProfesorController::class, 'ListaEscuela'])->name('listaEscuela');
+Route::get('/AsignarEscuela/{id}',[App\Http\Controllers\ProfesorController::class, 'AsignacionEscuela'])->name('listaEscuela');
