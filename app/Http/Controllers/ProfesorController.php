@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Escuela;
-
+use App\Models\User;
 class ProfesorController extends Controller
 {
     public function __construct()
@@ -37,7 +37,32 @@ class ProfesorController extends Controller
 
     public function AsignacionEscuela($id)
     {
-       echo "hola";
+       $usuarios = new User();
+
+       $actulizar=$usuarios->find(auth()->user()->id);
+       $actulizar->escuelas_id=$id;
+       $actulizar->save();
+        return json_encode(true);
+    }
+
+    public function getEscuela($id)
+    {
+        return Escuela::find($id);
+    }
+
+    public function UpdateEscuela(Request $request)
+    {
+       $validacion=$request->validate([
+        'idEscuela'=>'required|max:11',
+        'nombreescuela'=>'required|max:100',
+        'direccion'=>'required|max:120'           
+       ]);
+       $escuela=new Escuela();
+       $actualizar=$escuela->find($request->post('idEscuela'));
+       $actualizar->nombre_escuela=$request->post('nombreescuela');
+       $actualizar->direccion=$request->post('direccion');
+       $actualizar->save();
+       return json_encode(true);
     }
 
 }

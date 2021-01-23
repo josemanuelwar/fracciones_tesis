@@ -33,8 +33,9 @@ Route::post('/guardarTemas',[App\Http\Controllers\HomeController::class, 'guarda
 Route::get('/listatemasgrado/{id}',[App\Http\Controllers\HomeController::class, 'ListaTemas']);
 Route::post('/EditarTema',[App\Http\Controllers\HomeController::class,'EditarTema']);
 Route::post('/GuardarPreguntas',[App\Http\Controllers\HomeController::class,'GuardarPreguntas']);
-
 Route::get('/RegisrarEscuela', [App\Http\Controllers\ProfesorController::class, 'index'])->name('Escuela');
 Route::post('/GuardarEscuela', [App\Http\Controllers\ProfesorController::class, 'GaudarEscuela'])->name('guardar_escuela');
 Route::get('/listaEscuela',[App\Http\Controllers\ProfesorController::class, 'ListaEscuela'])->name('listaEscuela');
 Route::get('/AsignarEscuela/{id}',[App\Http\Controllers\ProfesorController::class, 'AsignacionEscuela'])->name('listaEscuela');
+Route::get('/GetEscuela/{id}',[App\Http\Controllers\ProfesorController::class, 'getEscuela'])->name('UnaEscuela');
+Route::post('/UpdateEscuela',[App\Http\Controllers\ProfesorController::class, 'UpdateEscuela'])->name('updateEscuela');

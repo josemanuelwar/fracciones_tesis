@@ -3,6 +3,7 @@
         <div class="card-header">Lista de alumnos</div>
 
         <div class="card-body">
+           <div class="table-responsive"> 
             <table class="table">
                 <thead>
                     <tr>
@@ -18,19 +19,19 @@
                 <tbody>
                     <tr v-for=" lista in lisalum" v-bind:key="lista.id">
                         <td>
-                            {{lista.Nombre}}
+                            {{lista.nombrecompleto}}
                         </td>
                         <td>
-                            {{lista.App}}
+                            {{lista.apellido_paterno}}
                         </td>
                         <td>
-                            {{lista.Apm}}
+                            {{lista.apellido_materno}}
                         </td>
                         <td>
-                            {{lista.Direccion}}
+                            {{lista.direccion}}
                         </td>
                         <td>
-                            {{lista.Escuela}}
+                            {{lista.nombre_escuela}}
                         </td>
                         <td>
                             {{lista.email}}
@@ -45,7 +46,7 @@
                     </tr>
                 </tbody>
             </table>
-
+        </div>
             <!-- modal -->
             <modal name="example" :width="300" :height="250" :adaptive="true">
                  <div class="modal-dialog" role="document">

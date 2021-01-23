@@ -3,7 +3,7 @@
 namespace App\Imports;
 
 use App\Models\User;
-use App\Models\personas;
+use App\Models\Persona;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Hash;
 class UsersImport implements ToModel
@@ -16,24 +16,22 @@ class UsersImport implements ToModel
     public function model(array $row)
     {
         /** prosesamos el archivo exel */
-        $persona=new personas();
-        $persona->Nombre=$row[0];
-        $persona->App=$row[1];
-        $persona->Apm=$row[2];
-        $persona->Direccion=$row[3];
-        $persona->Escuela=$row[4];
+        $persona=new Persona();
+        $persona->nombrecompleto=$row[0];
+        $persona->apellido_paterno=$row[1];
+        $persona->apellido_materno=$row[2];
+        $persona->direccion=$row[3];
         $persona->save();
-        
         /** recuperamos el id de las persona insertadas */   
-        $idpersona = personas::latest('id')->first();
-        
+        $idpersona = Persona::latest('id')->first();
         return new User([
             'nombre_usuario' => $row[0],
-            'email' => $row[5],
-            'password' => Hash::make($row[6]),
-            'rol' => 3,
-            'persona'=> $idpersona['id'],
-            'maestro' => auth()->user()->id
+            'email' => $row[4],
+            'password' => Hash::make($row[5]),
+            'roles_id' => 3,
+            'personas_id'=> $idpersona['id'],
+            'users_id' => auth()->user()->id,
+            'escuelas_id' => auth()->user()->escuelas_id
         ]);
     }
 }

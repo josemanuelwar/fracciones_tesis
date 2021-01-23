@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\personas;
+use App\Models\Persona;
+use App\Models\Escuela;
+
 use App\Models\grado_primaria;
 use App\Models\temas;
 use App\Models\preguntas;
@@ -54,28 +56,28 @@ class HomeController extends Controller
             'app' => 'required|max:60',
             'apm' => 'required|max:60',
             'direccion' => 'required|max:120',
-            'Escuela' => 'required|max:60',
+            // 'Escuela' => 'required|max:60',
             'email' => 'required|max:60|email|unique:users',
             'password' => 'required|max:60|min:8',
             ]);
             /*** gaurdamos en la tabla personas */
-            $persona=new personas();
-            $persona->Nombre=$request->post('nombre');
-            $persona->App=$request->post('app');
-            $persona->Apm=$request->post('apm');
-            $persona->Direccion=$request->post('direccion');
-            $persona->Escuela=$request->post('Escuela');
+            $persona=new Persona();
+            $persona->nombrecompleto=$request->post('nombre');
+            $persona->apellido_paterno=$request->post('app');
+            $persona->apellido_materno=$request->post('apm');
+            $persona->direccion=$request->post('direccion');
             $persona->save();
             /** traemos el ultimo id que se genero en la insercion en la tabla personas */
-            $idpersona = personas::latest('id')->first();
+            $idpersona = Persona::latest('id')->first();
             /**guardamos en la tabla usuarios */
             $usuarios = new User();
             $usuarios->nombre_usuario = $request->post('nombre');
             $usuarios->email = $request->post('email');
             $usuarios->password = Hash::make($request->post('password'));
-            $usuarios->rol = 3;
-            $usuarios->persona = $idpersona['id'];
-            $usuarios->maestro = auth()->user()->id;
+            $usuarios->roles_id = 3;
+            $usuarios->personas_id = $idpersona['id'];
+            $usuarios->users_id = auth()->user()->id;
+            $usuarios->escuelas_id=auth()->user()->escuelas_id;
             $usuarios->save();
             // $request->session()->flash('status', 'Task was successful!');
             return back()->with('success','Se ha registrado correctamente');
@@ -146,19 +148,21 @@ class HomeController extends Controller
     {
         if($request->ajax()) 
         {
-            $persona=new personas();
-            $id=auth()->user()->id;
-            $alumnos=$persona->listaAlumnos($id);
-            return $alumnos;
+            $personas=new Persona();
+            $alumnos=$personas->ListaAlumnos(auth()->user()->id);
+            return $alumnos;         
         }
         return view('profesor.Listausuarios');
     }
     //cargamos el formulario editar de usuarios
     public function editarview(Request $request, $id)
     {
-        $persona=new personas();
-        $alumnos=$persona->Alumno($id);
-        return view('profesor.Editarusuarios')->with('alumnos',$alumnos)->with('id',$id);
+        $persona=new Persona();
+        $alumnos=$persona->Alumnos($id);
+        $escuela=new Escuela();
+        $todas=$escuela->get();
+        return view('profesor.Editarusuarios')->with('alumnos',$alumnos)->with('id',$id)
+        ->with('escuelas',$todas);
     }
 
     public function editarAlumnos(Request $request)
@@ -169,32 +173,34 @@ class HomeController extends Controller
             'app' => 'required|max:60',
             'apm' => 'required|max:60',
             'direccion' => 'required|max:120',
-            'Escuela' => 'required|max:60',
+            'escuela' => 'required|max:60',
             'email' => 'required|max:60|email',
             'id'=>'required|max:11'
             ]);
-        $datos=array('Nombre'=>$request->post('nombre'),
-                    'App'=>$request->post('app'),
-                    'Apm'=>$request->post('apm'),
-                    'Direccion'=>$request->post('direccion'),
-                    'Escuela'=>$request->post('Escuela'));
+        $datos=array('nombrecompleto'=>$request->post('nombre'),
+                    'apellido_paterno'=>$request->post('app'),
+                    'apellido_materno'=>$request->post('apm'),
+                    'direccion'=>$request->post('direccion'),);
         if($request->post('password1') != null)
         {            
             $data = array(
             'nombre_usuario' =>$request->post('nombre'),  
             'email'=>$request->post('email'),
-            'password'=>$request->post('password1'));
+            'password'=>$request->post('password1'),
+            'escuelas_id'=>$request->post('escuela'));
         }
         else
         {
             $data = array(
                 'nombre_usuario' => $request->post('nombre'),
-                'email'=>$request->post('email'));
+                'email'=>$request->post('email'),
+                'escuelas_id'=>$request->post('escuela')
+            );
         }    
 
         $id=$request->post('id');
-        $persona=new personas(); 
-        $update=$persona->UpdateAlumnos($datos,$id,$data); 
+        $persona=new Persona(); 
+        $update=$persona->actualizarAlumno($datos,$id,$data); 
         if($update){
             return back()->with('success','Datos Actulizados correctamente');
         }else{

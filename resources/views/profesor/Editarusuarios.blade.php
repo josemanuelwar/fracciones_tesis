@@ -15,32 +15,44 @@
                 <input type="hidden" name="id" value="{{$id}}"/>
                 <div class="form-group">
                     <label for="nombre">Nombre del alumno</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" placeholder="Ingresa el nombre" value="{{$alumnos[0]->Nombre}}"/>   
+                    <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" placeholder="Ingresa el nombre" value="{{old('nombre',$alumnos[0]->nombrecompleto)}}"/>   
                     {!! $errors->first('nombre','<br><small id="nombreHelp6" class="alert alert-danger">:message</small>') !!}
                 </div>
                 <div class="form-group">
                     <label for="app">Apellido Paterno</label>
-                    <input type="text" class="form-control" id="app" name="app" aria-describedby="appHelp" placeholder="Ingresa el nombre" value="{{$alumnos[0]->App}}" />
+                    <input type="text" class="form-control" id="app" name="app" aria-describedby="appHelp" placeholder="Ingresa el nombre" value="{{old('app',$alumnos[0]->apellido_paterno)}}" />
                     {!! $errors->first('app','<br><small id="appHelp5" class="alert alert-danger">:message</small>')!!}
                 </div>
                 <div class="form-group">
                     <label for="apm">Apellido Materno</label>
-                    <input type="text" class="form-control" id="apm" name="apm" aria-describedby="apmHelp" placeholder="Ingresa el nombre" value="{{$alumnos[0]->Apm}}" />
+                    <input type="text" class="form-control" id="apm" name="apm" aria-describedby="apmHelp" placeholder="Ingresa el nombre" value="{{old('apm',$alumnos[0]->apellido_materno)}}" />
                     {!! $errors->first('apm','<br><small id="appHelp4" class="alert alert-danger">:message</small>')!!}
                 </div>
                 <div class="form-group">
                     <label for="direccion">Direccion</label>
-                    <input type="text" class="form-control" id="direccion" name="direccion" aria-describedby="direccionHelp" placeholder="Ingresa el nombre" value="{{$alumnos[0]->Direccion}}"/>
+                    <input type="text" class="form-control" id="direccion" name="direccion" aria-describedby="direccionHelp" placeholder="Ingresa el nombre" value="{{old('direccion',$alumnos[0]->direccion)}}"/>
                     {!! $errors->first('direccion','<br><small id="appHelp3" class="alert alert-danger">:message</small>')!!}
                 </div>
                 <div class="form-group">
-                    <label for="Escuela">Escuela</label>
-                    <input type="text" class="form-control" id="Escuela" name="Escuela" aria-describedby="EscuelaHelp" placeholder="Ingresa el nombre" value="{{$alumnos[0]->Escuela}}"/>
-                    {!! $errors->first('Escuela','<br><small id="appHelp2" class="alert alert-danger">:message</small>')!!}
+                    <label for="escuela">Seleciona la escuela</label>
+                    <select name="escuela" id="escuela" class="form-control">
+                        @if($escuelas !== null)
+                            @foreach($escuelas as $value)
+                                @if($alumnos[0]->escuelas_id == $value['id'])
+                                    <option value="$value['id']" select>{{$value['nombre_escuela']}}</option>
+                                @else    
+                                    <option value="{{$value['id']}}">{{$value['nombre_escuela']}}</option>
+                                @endif
+                            @endforeach    
+                        @else
+                            <option value="">no hay Escuela asignado </option>
+                        @endif
+                        
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Correo Electronico</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" placeholder="Enter email" value="{{$alumnos[0]->email}}"/>
+                    <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" placeholder="Enter email" value="{{old('email',$alumnos[0]->email)}}"/>
                     {!! $errors->first('email','<br><small id="appHelp1" class="alert alert-danger">:message</small>')!!}
                 </div>
                 <div class="form-group">

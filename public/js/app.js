@@ -2358,6 +2358,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2603,13 +2604,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       escuela: "",
       Direccion: "",
+      idescuela: 0,
       alerat_buena: false,
       alerta_mala: false,
+      mesaje: "",
       listaescue: []
     };
   },
@@ -2624,9 +2649,11 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         if (response.data === "true") {
           me.alerat_buena = true;
+          me.mesaje = "Se ha guardado correcta mente";
         }
       })["catch"](function (error) {
         me.alerta_mala = true;
+        me.mesaje = "Todos los campos son requeridos";
       });
     },
     getlistescuela: function getlistescuela() {
@@ -2642,13 +2669,60 @@ __webpack_require__.r(__webpack_exports__);
       var me = this;
       var url = "/AsignarEscuela/" + id;
       axios.get(url).then(function (response) {
-        console.log(response);
+        if (response.data === true) {
+          me.alerat_buena = true;
+          me.mesaje = "Se ha asignado correctamente correcta mente";
+        }
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    editarEscuela: function editarEscuela(id) {},
-    eliminarEscuela: function eliminarEscuela(id) {}
+    editarEscuela: function editarEscuela(id) {
+      var me = this;
+      var url = "/GetEscuela/" + id;
+      axios.get(url).then(function (response) {
+        me.id = response.data.id;
+        me.escuela = response.data.nombre_escuela;
+        me.Direccion = response.data.direccion;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      this.$modal.show("editar");
+    },
+    eliminarEscuela: function eliminarEscuela(id) {},
+    Modealcerrar: function Modealcerrar() {
+      this.$modal.hide("editar");
+      this.clear();
+    },
+    clear: function clear() {
+      var me = this;
+      me.escuela = "";
+      me.Direccion = "";
+      me.id = "";
+    },
+    editarEs: function editarEs(e) {
+      var _this = this;
+
+      e.preventDefault();
+      var me = this;
+      var url = "/UpdateEscuela";
+      axios.post(url, {
+        'idEscuela': me.id,
+        'nombreescuela': me.escuela,
+        'direccion': me.Direccion
+      }).then(function (response) {
+        if (response.data === true) {
+          me.alerat_buena = true;
+          me.mesaje = "Se han actualizado correctamente los datos ";
+
+          _this.Modealcerrar();
+
+          _this.getlistescuela();
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
   },
   mounted: function mounted() {
     this.getlistescuela();
@@ -39433,98 +39507,100 @@ var render = function() {
       "div",
       { staticClass: "card-body" },
       [
-        _c("table", { staticClass: "table" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.lisalum, function(lista) {
-              return _c("tr", { key: lista.id }, [
-                _c("td", [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(lista.Nombre) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(lista.App) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(lista.Apm) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(lista.Direccion) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(lista.Escuela) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(lista.email) +
-                      "\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "btn-group",
-                      attrs: { role: "group", "aria-label": "Basic example" }
-                    },
-                    [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "btn btn-primary",
-                          attrs: { href: _vm.urlEditar + lista.id }
-                        },
-                        [_vm._v("Editar")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-danger",
-                          attrs: { type: "button", id: "show-modal" },
-                          on: {
-                            click: function($event) {
-                              return _vm.Eliminar(lista.id)
+        _c("div", { staticClass: "table-responsive" }, [
+          _c("table", { staticClass: "table" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.lisalum, function(lista) {
+                return _c("tr", { key: lista.id }, [
+                  _c("td", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(lista.nombrecompleto) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(lista.apellido_paterno) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(lista.apellido_materno) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(lista.direccion) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(lista.nombre_escuela) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(lista.email) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "btn-group",
+                        attrs: { role: "group", "aria-label": "Basic example" }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-primary",
+                            attrs: { href: _vm.urlEditar + lista.id }
+                          },
+                          [_vm._v("Editar")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger",
+                            attrs: { type: "button", id: "show-modal" },
+                            on: {
+                              click: function($event) {
+                                return _vm.Eliminar(lista.id)
+                              }
                             }
-                          }
-                        },
-                        [_vm._v("Eliminar")]
-                      )
-                    ]
-                  )
+                          },
+                          [_vm._v("Eliminar")]
+                        )
+                      ]
+                    )
+                  ])
                 ])
-              ])
-            }),
-            0
-          )
+              }),
+              0
+            )
+          ])
         ]),
         _vm._v(" "),
         _c(
@@ -39881,178 +39957,324 @@ var render = function() {
       _vm._v("\r\n                Registrar Escuela\r\n            ")
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "card-body" }, [
-      _vm.alerat_buena
-        ? _c("div", { staticClass: "alert alert-success alert-block" }, [
-            _c(
-              "button",
-              {
-                staticClass: "close",
-                attrs: { type: "button", "data-dismiss": "alert" }
-              },
-              [_vm._v("×")]
-            ),
-            _vm._v(" "),
-            _c("strong", [_vm._v("Se ha gurdado corectamente")])
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.alerta_mala
-        ? _c("div", { staticClass: "alert alert-danger alert-block" }, [
-            _c(
-              "button",
-              {
-                staticClass: "close",
-                attrs: { type: "button", "data-dismiss": "alert" }
-              },
-              [_vm._v("×")]
-            ),
-            _vm._v(" "),
-            _c("strong", [_vm._v("Todos los campos son requeridos")])
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "form",
-        {
-          attrs: { id: "formulario_escuela", method: "post" },
-          on: { submit: _vm.checkForm }
-        },
-        [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "escuela" } }, [
-              _vm._v("Nombre de la escuela")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
+    _c(
+      "div",
+      { staticClass: "card-body" },
+      [
+        _vm.alerat_buena
+          ? _c("div", { staticClass: "alert alert-success alert-block" }, [
+              _c(
+                "button",
                 {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.escuela,
-                  expression: "escuela"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", id: "escuela" },
-              domProps: { value: _vm.escuela },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.escuela = $event.target.value
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "direccion" } }, [_vm._v("Direccion")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
+                  staticClass: "close",
+                  attrs: { type: "button", "data-dismiss": "alert" }
+                },
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("strong", [_vm._v(_vm._s(_vm.mesaje))])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.alerta_mala
+          ? _c("div", { staticClass: "alert alert-danger alert-block" }, [
+              _c(
+                "button",
                 {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.Direccion,
-                  expression: "Direccion"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", id: "direccion" },
-              domProps: { value: _vm.Direccion },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.Direccion = $event.target.value
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("input", { attrs: { type: "submit", value: "Guardar" } })
-        ]
-      ),
-      _vm._v(" "),
-      _c("hr"),
-      _vm._v(" "),
-      _c("table", { staticClass: "table" }, [
-        _vm._m(0),
+                  staticClass: "close",
+                  attrs: { type: "button", "data-dismiss": "alert" }
+                },
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("strong", [_vm._v(_vm._s(_vm.mesaje))])
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _c(
-          "tbody",
-          _vm._l(_vm.listaescue, function(item, index) {
-            return _c("tr", { key: index }, [
-              _c("td", [
-                _vm._v(
-                  "\r\n                                " +
-                    _vm._s(item.id) +
-                    "\r\n                            "
-                )
+          "form",
+          {
+            attrs: { id: "formulario_escuela", method: "post" },
+            on: { submit: _vm.checkForm }
+          },
+          [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "escuela" } }, [
+                _vm._v("Nombre de la escuela")
               ]),
               _vm._v(" "),
-              _c("td", [
-                _vm._v(
-                  "\r\n                                " +
-                    _vm._s(item.nombre_escuela) +
-                    "\r\n                            "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _vm._v(
-                  "\r\n                                " +
-                    _vm._s(item.direccion) +
-                    "\r\n                            "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "button",
+              _c("input", {
+                directives: [
                   {
-                    on: {
-                      click: function($event) {
-                        return _vm.asignacionEscuela(item.id)
-                      }
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.escuela,
+                    expression: "escuela"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "escuela" },
+                domProps: { value: _vm.escuela },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  },
-                  [_vm._v("Asignar")]
+                    _vm.escuela = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "direccion" } }, [
+                _vm._v("Direccion")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.Direccion,
+                    expression: "Direccion"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "direcion" },
+                domProps: { value: _vm.Direccion },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.Direccion = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("input", { attrs: { type: "submit", value: "Guardar" } })
+          ]
+        ),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
+        _c("div", { staticClass: "table-responsive" }, [
+          _c("table", { staticClass: "table" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.listaescue, function(item, index) {
+                return _c("tr", { key: index }, [
+                  _c("td", [
+                    _vm._v(
+                      "\r\n                                    " +
+                        _vm._s(item.id) +
+                        "\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\r\n                                    " +
+                        _vm._s(item.nombre_escuela) +
+                        "\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\r\n                                    " +
+                        _vm._s(item.direccion) +
+                        "\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.asignacionEscuela(item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Asignar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.editarEscuela(item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Editar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.eliminarEscuela(item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Eliminar")]
+                    )
+                  ])
+                ])
+              }),
+              0
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "modal",
+          {
+            attrs: { name: "editar", width: 500, height: 350, adaptive: true }
+          },
+          [
+            _c("hr"),
+            _vm._v(" "),
+            _c("h3", [_vm._v("Editar Escuela")]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c(
+              "form",
+              { attrs: { method: "post" }, on: { submit: _vm.editarEs } },
+              [
+                _c(
+                  "div",
+                  { staticClass: "form-group", staticStyle: { margin: "5px" } },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.idescuela,
+                          expression: "idescuela"
+                        }
+                      ],
+                      attrs: { type: "hidden", name: "idescuela" },
+                      domProps: { value: _vm.idescuela },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.idescuela = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("label", { attrs: { for: "escuela" } }, [
+                      _vm._v("Nombre de la escuela")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.escuela,
+                          expression: "escuela"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", id: "escuela" },
+                      domProps: { value: _vm.escuela },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.escuela = $event.target.value
+                        }
+                      }
+                    })
+                  ]
                 ),
                 _vm._v(" "),
                 _c(
-                  "button",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.editarEscuela(item.id)
+                  "div",
+                  { staticClass: "form-group", staticStyle: { margin: "5px" } },
+                  [
+                    _c("label", { attrs: { for: "direcion" } }, [
+                      _vm._v("Direccion")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.Direccion,
+                          expression: "Direccion"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", id: "direcion" },
+                      domProps: { value: _vm.Direccion },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.Direccion = $event.target.value
+                        }
                       }
-                    }
-                  },
-                  [_vm._v("Editar")]
+                    })
+                  ]
                 ),
                 _vm._v(" "),
                 _c(
-                  "button",
+                  "div",
                   {
-                    on: {
-                      click: function($event) {
-                        return _vm.eliminarEscuela(item.id)
-                      }
-                    }
+                    staticClass: "modal-footer",
+                    staticStyle: { margin: "5px" }
                   },
-                  [_vm._v("Eliminar")]
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "submit", "data-dismiss": "modal" }
+                      },
+                      [_vm._v("Aceptar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button", "data-dismiss": "modal" },
+                        on: {
+                          click: function($event) {
+                            return _vm.Modealcerrar()
+                          }
+                        }
+                      },
+                      [_vm._v("Canselar")]
+                    )
+                  ]
                 )
-              ])
-            ])
-          }),
-          0
+              ]
+            )
+          ]
         )
-      ])
-    ])
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = [
