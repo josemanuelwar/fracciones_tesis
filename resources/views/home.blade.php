@@ -9,7 +9,7 @@
                 <div class="card bg-success text-white mb-4">
                     <div class="card-body">IMPORTA ALUMNOS</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="s{{route('Cargr-exel')}}">IMPORTAR</a>
+                        <a class="small text-white stretched-link" href="{{route('Cargr-exel')}}">IMPORTAR</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
@@ -18,7 +18,7 @@
                 <div class="card bg-secondary text-white mb-4">
                     <div class="card-body">REGISTAR ALUMNOS</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="">REGISTRAR</a>
+                        <a class="small text-white stretched-link" href="{{route('Alumnos')}}">REGISTRAR</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
