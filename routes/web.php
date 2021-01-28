@@ -45,3 +45,5 @@ Route::get('/agregarmaterisa',[App\Http\Controllers\ProfesorController::class,'M
 Route::post('/guardarmateria',[App\Http\Controllers\ProfesorController::class,'GuardarMateria'])->name('GuardarMateria');
 /** retornamos la lista de materias  */
 Route::get('/listamateria',[App\Http\Controllers\ProfesorController::class,'ListaMaterias'])->name('ListaMaterias');
+/**Actulizamos los datos de la materia */
+Route::post('/ActulizarMaterias',[App\Http\Controllers\ProfesorController::class,'ActulizarMateria'])->name('ActulizaMateria');

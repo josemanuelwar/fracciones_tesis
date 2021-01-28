@@ -117,6 +117,11 @@ class ProfesorController extends Controller
        return response()->Json($lista);
     }
 
-    
+    public function ActulizarMateria()
+    {
+        echo "holas";
+    }
+
+
 
 }

@@ -53,12 +53,46 @@
                                 {{item.nombregrado}}
                             </td>
                             <td>
-                                <button class="btn btn-outline-primary">Editar</button>
+                                <button class="btn btn-outline-primary" @click="editarMa(item.id,item.grados_id,item.siglasmaterias,item.nombremateria)">Editar</button>
                                 <button class="btn btn-outline-danger">Eliminar</button>
                             </td>
                         </tr>
                     </Tbody>
                 </table>
+                <!-- modal para editar -->
+                <modal name="editar" :width="500" :height="400" :adaptive="true">
+                    <!-- formulario -->
+                    <form @submit="editarMateria">
+                        <hr>
+                            <div class="form-group" style="margin:5px;">
+                                <h4>Editar Materia</h4>
+                            </div>
+                        <hr>
+                        <div class="form-group" style="margin:5px;">
+                            <label for="nombre">Nombre de la materia</label>
+                            <input type="text" name="nombre" id="nombre" class="form-control" v-model="materias" required/>
+                            <input type="hidden" name="istema" v-model="idtema">
+                        </div>
+                        <div class="form-group" style="margin:5px;">
+                            <label for="materia">Abreviatura de la materia</label>
+                            <input type="text" name="materia" id="materia" class="form-control" v-model="abreviatura" required/>
+                        </div>
+                        <div class="form-group" style="margin:5px;">
+                            <label for="grados">Seleccionar grado</label>
+                            <select name="grado" id="grado" class="form-control" v-model="idgrado" required>
+                                <option v-for="(item, index) in listagardo" :key="index" v-bind:value="item.id">
+                                    {{item.nombregrado}}
+                                </option>
+                            </select>
+                        </div> 
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-primary">Actualizar</button>
+                            <button type="button" class="btn btn-outline-danger" @click="censelar">Cancelar</button>
+                        </div>    
+                    </form>
+                    <!-- fi del formulario -->
+                </modal>
+                <!-- modal de eliminar -->
             </div>        
         </div>
     </div>
@@ -75,6 +109,7 @@ export default {
             bandE:false,
             mesaje:"",
             Materiaslis:[],
+            idtema:0
         }
     },
     methods:{
@@ -87,6 +122,7 @@ export default {
                 if(response.data === true){
                     me.band=true;
                     me.mesaje="Se ha guardado correctamente la materias";
+                    this.clear();
                 }else if(response.data === false){
                     me.bandE=true;
                     me.mesaje="Ha ocurrido un error al guardar la materia";
@@ -117,7 +153,38 @@ export default {
                     console.log(error);
                 }
             );
-        }
+        },
+        editarMa(id,idgrado,siglas,nombre){
+            let me=this;
+            me.materias=nombre;
+            me.abreviatura=siglas;
+            me.idgrado=idgrado;
+            me.idtema=id;
+            this.$modal.show('editar');
+
+        },
+        censelar(){
+            this.$modal.hide('editar');
+            this.clear();
+        },
+        clear(){
+            let me=this;
+            me.materias="";
+            me.abreviatura="";
+            me.idgrado=1;
+        },
+        editarMateria(e){
+            e.preventDefault();
+            let me=this;
+            let url="/ActulizarMaterias";
+            axios.post(url,{'nombremateria':me.materias,'idmateria':me.idtema,
+                            'abreviatura':me.abreviatura,'idgrado':me.idgrado}).then(
+            response =>{
+                console.log(response);
+            }).catch(error=>{
+                console.log(error);
+            });
+        },
     },
     mounted(){
         this.opcione();

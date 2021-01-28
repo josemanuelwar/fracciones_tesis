@@ -2474,6 +2474,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2484,11 +2518,14 @@ __webpack_require__.r(__webpack_exports__);
       band: false,
       bandE: false,
       mesaje: "",
-      Materiaslis: []
+      Materiaslis: [],
+      idtema: 0
     };
   },
   methods: {
     GuardarMateria: function GuardarMateria(e) {
+      var _this = this;
+
       e.preventDefault();
       var url = '/guardarmateria';
       var me = this;
@@ -2500,6 +2537,8 @@ __webpack_require__.r(__webpack_exports__);
         if (response.data === true) {
           me.band = true;
           me.mesaje = "Se ha guardado correctamente la materias";
+
+          _this.clear();
         } else if (response.data === false) {
           me.bandE = true;
           me.mesaje = "Ha ocurrido un error al guardar la materia";
@@ -2522,6 +2561,39 @@ __webpack_require__.r(__webpack_exports__);
       var me = this;
       axios.get(url).then(function (response) {
         me.Materiaslis = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    editarMa: function editarMa(id, idgrado, siglas, nombre) {
+      var me = this;
+      me.materias = nombre;
+      me.abreviatura = siglas;
+      me.idgrado = idgrado;
+      me.idtema = id;
+      this.$modal.show('editar');
+    },
+    censelar: function censelar() {
+      this.$modal.hide('editar');
+      this.clear();
+    },
+    clear: function clear() {
+      var me = this;
+      me.materias = "";
+      me.abreviatura = "";
+      me.idgrado = 1;
+    },
+    editarMateria: function editarMateria(e) {
+      e.preventDefault();
+      var me = this;
+      var url = "/ActulizarMaterias";
+      axios.post(url, {
+        'nombremateria': me.materias,
+        'idmateria': me.idtema,
+        'abreviatura': me.abreviatura,
+        'idgrado': me.idgrado
+      }).then(function (response) {
+        console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -40025,70 +40097,280 @@ var render = function() {
       _vm._v(" "),
       _c("hr"),
       _vm._v(" "),
-      _c("div", { staticClass: "table-responsive" }, [
-        _c(
-          "table",
-          { staticClass: "table" },
-          [
-            _c(
-              "thead",
-              [
-                _c("TD", { attrs: { scope: "col" } }, [_vm._v("MATERIA")]),
-                _vm._v(" "),
-                _c("td", { attrs: { scope: "col" } }, [_vm._v("ABREVITURA")]),
-                _vm._v(" "),
-                _c("td", { attrs: { scope: "col" } }, [_vm._v("GRADO")]),
-                _vm._v(" "),
-                _c("TD", { attrs: { scope: "col" } }, [_vm._v("ACCIONES")])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "Tbody",
-              _vm._l(_vm.Materiaslis, function(item, index) {
-                return _c("tr", { key: index }, [
-                  _c("td", [
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(item.nombremateria) +
-                        "\n                        "
-                    )
-                  ]),
+      _c(
+        "div",
+        { staticClass: "table-responsive" },
+        [
+          _c(
+            "table",
+            { staticClass: "table" },
+            [
+              _c(
+                "thead",
+                [
+                  _c("TD", { attrs: { scope: "col" } }, [_vm._v("MATERIA")]),
                   _vm._v(" "),
-                  _c("td", [
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(item.siglasmaterias) +
-                        "\n                        "
-                    )
-                  ]),
+                  _c("td", { attrs: { scope: "col" } }, [_vm._v("ABREVITURA")]),
                   _vm._v(" "),
-                  _c("td", [
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(item.nombregrado) +
-                        "\n                        "
-                    )
-                  ]),
+                  _c("td", { attrs: { scope: "col" } }, [_vm._v("GRADO")]),
                   _vm._v(" "),
-                  _c("td", [
-                    _c("button", { staticClass: "btn btn-outline-primary" }, [
-                      _vm._v("Editar")
+                  _c("TD", { attrs: { scope: "col" } }, [_vm._v("ACCIONES")])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "Tbody",
+                _vm._l(_vm.Materiaslis, function(item, index) {
+                  return _c("tr", { key: index }, [
+                    _c("td", [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(item.nombremateria) +
+                          "\n                        "
+                      )
                     ]),
                     _vm._v(" "),
-                    _c("button", { staticClass: "btn btn-outline-danger" }, [
-                      _vm._v("Eliminar")
+                    _c("td", [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(item.siglasmaterias) +
+                          "\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(item.nombregrado) +
+                          "\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-outline-primary",
+                          on: {
+                            click: function($event) {
+                              return _vm.editarMa(
+                                item.id,
+                                item.grados_id,
+                                item.siglasmaterias,
+                                item.nombremateria
+                              )
+                            }
+                          }
+                        },
+                        [_vm._v("Editar")]
+                      ),
+                      _vm._v(" "),
+                      _c("button", { staticClass: "btn btn-outline-danger" }, [
+                        _vm._v("Eliminar")
+                      ])
                     ])
                   ])
+                }),
+                0
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "modal",
+            {
+              attrs: { name: "editar", width: 500, height: 400, adaptive: true }
+            },
+            [
+              _c("form", { on: { submit: _vm.editarMateria } }, [
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "form-group", staticStyle: { margin: "5px" } },
+                  [_c("h4", [_vm._v("Editar Materia")])]
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "form-group", staticStyle: { margin: "5px" } },
+                  [
+                    _c("label", { attrs: { for: "nombre" } }, [
+                      _vm._v("Nombre de la materia")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.materias,
+                          expression: "materias"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        name: "nombre",
+                        id: "nombre",
+                        required: ""
+                      },
+                      domProps: { value: _vm.materias },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.materias = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.idtema,
+                          expression: "idtema"
+                        }
+                      ],
+                      attrs: { type: "hidden", name: "istema" },
+                      domProps: { value: _vm.idtema },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.idtema = $event.target.value
+                        }
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "form-group", staticStyle: { margin: "5px" } },
+                  [
+                    _c("label", { attrs: { for: "materia" } }, [
+                      _vm._v("Abreviatura de la materia")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.abreviatura,
+                          expression: "abreviatura"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        name: "materia",
+                        id: "materia",
+                        required: ""
+                      },
+                      domProps: { value: _vm.abreviatura },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.abreviatura = $event.target.value
+                        }
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "form-group", staticStyle: { margin: "5px" } },
+                  [
+                    _c("label", { attrs: { for: "grados" } }, [
+                      _vm._v("Seleccionar grado")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.idgrado,
+                            expression: "idgrado"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { name: "grado", id: "grado", required: "" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.idgrado = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      _vm._l(_vm.listagardo, function(item, index) {
+                        return _c(
+                          "option",
+                          { key: index, domProps: { value: item.id } },
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(item.nombregrado) +
+                                "\n                            "
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-primary",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v("Actualizar")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-danger",
+                      attrs: { type: "button" },
+                      on: { click: _vm.censelar }
+                    },
+                    [_vm._v("Cancelar")]
+                  )
                 ])
-              }),
-              0
-            )
-          ],
-          1
-        )
-      ])
+              ])
+            ]
+          )
+        ],
+        1
+      )
     ])
   ])
 }
