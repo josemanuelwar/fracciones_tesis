@@ -32,11 +32,16 @@
                     <input type="text" class="form-control" id="direccion" name="direccion" aria-describedby="direccionHelp" placeholder="Ingresa la direccion" value="{{old('direccion')}}">
                     {!! $errors->first('direccion','<br><small id="appHelp" class="alert alert-danger">:message</small>')!!}
                 </div>
-                <!-- <div class="form-group">
-                    <label for="Escuela">Escuela</label>
-                    <input type="text" class="form-control" id="Escuela" name="Escuela" aria-describedby="EscuelaHelp" placeholder="Ingresa el nombre">
-                    {!! $errors->first('Escuela','<br><small id="appHelp" class="alert alert-danger">:message</small>')!!}
-                </div> -->
+                <!-- <div class="form-group"> 
+                    <label for="Escuela">Seleciona la escuela</label>
+                    <select name="escuela" id="escuela" class="form-control">
+                        @foreach ($escuela as $value)
+                            <option value="{{$value['id']}}">{{$value['nombre_escuela']}}</option>
+                        @endforeach    
+                    </select>
+                 <input type="text" class="form-control" id="Escuela" name="Escuela" aria-describedby="EscuelaHelp" placeholder="Ingresa el nombre"> -->
+                 <!-- {!! $errors->first('Escuela','<br><small id="appHelp" class="alert alert-danger">:message</small>')!!} --> -->
+                <!-- </div> --> 
                 <div class="form-group">
                     <label for="exampleInputEmail1">Correo Electronico</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" placeholder="Enter email" value="{{old('email')}}">

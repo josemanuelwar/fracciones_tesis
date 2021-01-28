@@ -12,4 +12,9 @@ class Escuela extends Model
         'nombre_escuela',
         'direccion'
     ];
+
+    public function Materia()
+    {
+        return $this->morphToMany(Materia::class,'escuela');
+    }
 }

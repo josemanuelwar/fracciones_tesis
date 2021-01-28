@@ -42,7 +42,9 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function registroAlumnos(){
-        return view('profesor.regiAlumnos');
+        $escuela=new Escuela();
+        $todas=$escuela->get();
+        return view('profesor.regiAlumnos')->with("escuela",$todas);
     }
     /**
      * metodo de registrar los alumnos del profesor.

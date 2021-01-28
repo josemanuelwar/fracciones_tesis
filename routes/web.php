@@ -39,3 +39,9 @@ Route::get('/listaEscuela',[App\Http\Controllers\ProfesorController::class, 'Lis
 Route::get('/AsignarEscuela/{id}',[App\Http\Controllers\ProfesorController::class, 'AsignacionEscuela'])->name('listaEscuela');
 Route::get('/GetEscuela/{id}',[App\Http\Controllers\ProfesorController::class, 'getEscuela'])->name('UnaEscuela');
 Route::post('/UpdateEscuela',[App\Http\Controllers\ProfesorController::class, 'UpdateEscuela'])->name('updateEscuela');
+/**cargamos la vista para registrar la materia */
+Route::get('/agregarmaterisa',[App\Http\Controllers\ProfesorController::class,'Matreria'])->name('Materia');
+/**guardamos la materia */
+Route::post('/guardarmateria',[App\Http\Controllers\ProfesorController::class,'GuardarMateria'])->name('GuardarMateria');
+/** retornamos la lista de materias  */
+Route::get('/listamateria',[App\Http\Controllers\ProfesorController::class,'ListaMaterias'])->name('ListaMaterias');

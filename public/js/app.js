@@ -2400,6 +2400,141 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/MateriaComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/MateriaComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      materias: "",
+      abreviatura: "",
+      listagardo: "",
+      idgrado: 1,
+      band: false,
+      bandE: false,
+      mesaje: "",
+      Materiaslis: []
+    };
+  },
+  methods: {
+    GuardarMateria: function GuardarMateria(e) {
+      e.preventDefault();
+      var url = '/guardarmateria';
+      var me = this;
+      axios.post(url, {
+        'nombreMateria': me.materias,
+        'abreviatura': me.abreviatura,
+        'idgrado': me.idgrado
+      }).then(function (response) {
+        if (response.data === true) {
+          me.band = true;
+          me.mesaje = "Se ha guardado correctamente la materias";
+        } else if (response.data === false) {
+          me.bandE = true;
+          me.mesaje = "Ha ocurrido un error al guardar la materia";
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    opcione: function opcione() {
+      var url = '/agregarmaterisa';
+      var me = this;
+      axios.get(url).then(function (response) {
+        me.listagardo = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    listaMaterias: function listaMaterias() {
+      var url = "/listamateria";
+      var me = this;
+      axios.get(url).then(function (response) {
+        me.Materiaslis = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.opcione();
+    this.listaMaterias();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/PreguntasComponent.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/PreguntasComponent.vue?vue&type=script&lang=js& ***!
@@ -39715,6 +39850,264 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/MateriaComponent.vue?vue&type=template&id=cd601cfa&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/MateriaComponent.vue?vue&type=template&id=cd601cfa& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _vm.band
+      ? _c("div", { staticClass: "alert alert-success alert-block" }, [
+          _c(
+            "button",
+            {
+              staticClass: "close",
+              attrs: { type: "button", "data-dismiss": "alert" }
+            },
+            [_vm._v("×")]
+          ),
+          _vm._v(" "),
+          _c("strong", [_vm._v(_vm._s(_vm.mesaje))])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.bandE
+      ? _c("div", { staticClass: "alert alert-danger alert-block" }, [
+          _c(
+            "button",
+            {
+              staticClass: "close",
+              attrs: { type: "button", "data-dismiss": "alert" }
+            },
+            [_vm._v("×")]
+          ),
+          _vm._v(" "),
+          _c("strong", [_vm._v(_vm._s(_vm.mesaje))])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _c("form", { on: { submit: _vm.GuardarMateria } }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("label", { attrs: { for: "materia" } }, [
+            _vm._v("Nombre de la materia")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.materias,
+                expression: "materias"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              name: "materia",
+              id: "materia",
+              required: "",
+              maxlength: "20",
+              minlength: "2"
+            },
+            domProps: { value: _vm.materias },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.materias = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "abrebiatura" } }, [
+            _vm._v("Abreviatura de la materia")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.abreviatura,
+                expression: "abreviatura"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              name: "abrebiatura",
+              id: "abrebiatura",
+              required: "",
+              maxlength: "4",
+              minlength: "2"
+            },
+            domProps: { value: _vm.abreviatura },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.abreviatura = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "listagardos" } }, [
+            _vm._v("Selecciona el gardo")
+          ]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.idgrado,
+                  expression: "idgrado"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { name: "listagardos", id: "listagardos", required: "" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.idgrado = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.listagardo, function(item, index) {
+              return _c(
+                "option",
+                { key: index, domProps: { value: item.id } },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(item.nombregrado) +
+                      "\n                        "
+                  )
+                ]
+              )
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "btn btn-outline-primary",
+          attrs: { type: "submit", value: "Guardar" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("div", { staticClass: "table-responsive" }, [
+        _c(
+          "table",
+          { staticClass: "table" },
+          [
+            _c(
+              "thead",
+              [
+                _c("TD", { attrs: { scope: "col" } }, [_vm._v("MATERIA")]),
+                _vm._v(" "),
+                _c("td", { attrs: { scope: "col" } }, [_vm._v("ABREVITURA")]),
+                _vm._v(" "),
+                _c("td", { attrs: { scope: "col" } }, [_vm._v("GRADO")]),
+                _vm._v(" "),
+                _c("TD", { attrs: { scope: "col" } }, [_vm._v("ACCIONES")])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "Tbody",
+              _vm._l(_vm.Materiaslis, function(item, index) {
+                return _c("tr", { key: index }, [
+                  _c("td", [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(item.nombremateria) +
+                        "\n                        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(item.siglasmaterias) +
+                        "\n                        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(item.nombregrado) +
+                        "\n                        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("button", { staticClass: "btn btn-outline-primary" }, [
+                      _vm._v("Editar")
+                    ]),
+                    _vm._v(" "),
+                    _c("button", { staticClass: "btn btn-outline-danger" }, [
+                      _vm._v("Eliminar")
+                    ])
+                  ])
+                ])
+              }),
+              0
+            )
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h2", [_vm._v("MATERIAS")])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/PreguntasComponent.vue?vue&type=template&id=5976005f&":
 /*!***************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/PreguntasComponent.vue?vue&type=template&id=5976005f& ***!
@@ -40013,7 +40406,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { type: "text", id: "escuela" },
+                attrs: { type: "text", id: "escuela", required: "" },
                 domProps: { value: _vm.escuela },
                 on: {
                   input: function($event) {
@@ -40041,7 +40434,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { type: "text", id: "direcion" },
+                attrs: { type: "text", id: "direcion", required: "" },
                 domProps: { value: _vm.Direccion },
                 on: {
                   input: function($event) {
@@ -40054,7 +40447,10 @@ var render = function() {
               })
             ]),
             _vm._v(" "),
-            _c("input", { attrs: { type: "submit", value: "Guardar" } })
+            _c("input", {
+              staticClass: "btn btn-outline-primary",
+              attrs: { type: "submit", value: "Guardar" }
+            })
           ]
         ),
         _vm._v(" "),
@@ -40096,6 +40492,7 @@ var render = function() {
                     _c(
                       "button",
                       {
+                        staticClass: "btn btn-outline-success",
                         on: {
                           click: function($event) {
                             return _vm.asignacionEscuela(item.id)
@@ -40108,6 +40505,7 @@ var render = function() {
                     _c(
                       "button",
                       {
+                        staticClass: "btn btn-outline-primary",
                         on: {
                           click: function($event) {
                             return _vm.editarEscuela(item.id)
@@ -40120,6 +40518,7 @@ var render = function() {
                     _c(
                       "button",
                       {
+                        staticClass: "btn btn-outline-danger",
                         on: {
                           click: function($event) {
                             return _vm.eliminarEscuela(item.id)
@@ -53101,7 +53500,8 @@ Vue.component('temario-component', __webpack_require__(/*! ./components/Agregart
 Vue.component('lista-component', __webpack_require__(/*! ./components/ListatemarioComponents.vue */ "./resources/js/components/ListatemarioComponents.vue")["default"]);
 Vue.component('pregunta-component', __webpack_require__(/*! ./components/admin/PreguntasComponent.vue */ "./resources/js/components/admin/PreguntasComponent.vue")["default"]);
 Vue.component('alumno-component', __webpack_require__(/*! ./components/admin/AlumnoslisComponent.vue */ "./resources/js/components/admin/AlumnoslisComponent.vue")["default"]);
-Vue.component('escuela-component', __webpack_require__(/*! ./components/admin/RegistarEscuelaComponent.vue */ "./resources/js/components/admin/RegistarEscuelaComponent.vue")["default"]); // Vue.component('alumnos-component',require('./components/admin/listaalumnosComponent.vue').default);
+Vue.component('escuela-component', __webpack_require__(/*! ./components/admin/RegistarEscuelaComponent.vue */ "./resources/js/components/admin/RegistarEscuelaComponent.vue")["default"]);
+Vue.component('materia-component', __webpack_require__(/*! ./components/admin/MateriaComponent.vue */ "./resources/js/components/admin/MateriaComponent.vue")["default"]); // Vue.component('alumnos-component',require('./components/admin/listaalumnosComponent.vue').default);
 
 var app = new Vue({
   el: '#app'
@@ -53425,6 +53825,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AlumnoslisComponent_vue_vue_type_template_id_efa2a24a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AlumnoslisComponent_vue_vue_type_template_id_efa2a24a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/MateriaComponent.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/components/admin/MateriaComponent.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _MateriaComponent_vue_vue_type_template_id_cd601cfa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MateriaComponent.vue?vue&type=template&id=cd601cfa& */ "./resources/js/components/admin/MateriaComponent.vue?vue&type=template&id=cd601cfa&");
+/* harmony import */ var _MateriaComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MateriaComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/MateriaComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _MateriaComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _MateriaComponent_vue_vue_type_template_id_cd601cfa___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _MateriaComponent_vue_vue_type_template_id_cd601cfa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/MateriaComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/MateriaComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/admin/MateriaComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MateriaComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./MateriaComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/MateriaComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MateriaComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/MateriaComponent.vue?vue&type=template&id=cd601cfa&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/admin/MateriaComponent.vue?vue&type=template&id=cd601cfa& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MateriaComponent_vue_vue_type_template_id_cd601cfa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./MateriaComponent.vue?vue&type=template&id=cd601cfa& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/MateriaComponent.vue?vue&type=template&id=cd601cfa&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MateriaComponent_vue_vue_type_template_id_cd601cfa___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MateriaComponent_vue_vue_type_template_id_cd601cfa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

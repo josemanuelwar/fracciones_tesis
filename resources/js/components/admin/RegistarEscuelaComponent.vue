@@ -15,15 +15,15 @@
                 <form id="formulario_escuela" @submit="checkForm" method="post">
                     <div class="form-group">
                         <label for="escuela">Nombre de la escuela</label>
-                        <input type="text" class="form-control" id="escuela" v-model="escuela" />
+                        <input type="text" class="form-control" id="escuela" v-model="escuela" required/>
                         <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group">
                         <label for="direccion">Direccion</label>
-                        <input type="text" class="form-control" id="direcion" v-model="Direccion"/>
+                        <input type="text" class="form-control" id="direcion" v-model="Direccion" required/>
                         <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
-                    <input type="submit" value="Guardar">
+                    <input type="submit" value="Guardar" class="btn btn-outline-primary">
                 </form>
                 <hr>
                 <div class="table-responsive">
@@ -48,9 +48,9 @@
                                     {{item.direccion}}
                                 </td>
                                 <td>
-                                    <button @click="asignacionEscuela(item.id)">Asignar</button>
-                                    <button @click="editarEscuela(item.id)">Editar</button>
-                                    <button @click="eliminarEscuela(item.id)">Eliminar</button>
+                                    <button @click="asignacionEscuela(item.id)" class="btn btn-outline-success">Asignar</button>
+                                    <button @click="editarEscuela(item.id)" class="btn btn-outline-primary">Editar</button>
+                                    <button @click="eliminarEscuela(item.id)" class="btn btn-outline-danger">Eliminar</button>
                                 </td>
                             </tr>
 

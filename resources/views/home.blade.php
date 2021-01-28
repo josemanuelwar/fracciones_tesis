@@ -27,7 +27,7 @@
                 <div class="card bg-warning text-white mb-4">
                     <div class="card-body">LISTA ALUMNOS</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="">LISTA</a>
+                        <a class="small text-white stretched-link" href="{{route('ListaAlum')}}">LISTA</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                 <div class="card bg-info text-white mb-4">
                     <div class="card-body">REGISTRO DE ESCUELA</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="">ESCUELA</a>
+                        <a class="small text-white stretched-link" href="{{route('Escuela')}}">ESCUELA</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="card bg-dark text-white mb-4">
                     <div class="card-body">REGISTRAR MATERIA</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="">MATERIA</a>
+                        <a class="small text-white stretched-link" href="{{route('Materia')}}">MATERIA</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>
