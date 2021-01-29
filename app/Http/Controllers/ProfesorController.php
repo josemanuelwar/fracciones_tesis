@@ -117,9 +117,21 @@ class ProfesorController extends Controller
        return response()->Json($lista);
     }
 
-    public function ActulizarMateria()
+    public function ActulizarMateria(Request $request)
     {
-        echo "holas";
+        $validation=$request->validate([
+            'idmateria'=>'required|max:11',
+            'nombremateria'=>'required|max:100',
+            'abreviatura'=>'required|max:60',
+            'idgrado'=>'required|max:11',
+            'idgradoanterior'=>'required|max:11'           
+           ]);
+        $data = array('nombremateria' => $validation['nombremateria'],
+                      'siglasmaterias'=>$validation['abreviatura']);
+        $updateMat = new Materia();
+        $resultado= $updateMat->actualizarMateria($validation['idmateria'],$data,$validation['idgrado'],$validation['idgradoanterior']);    
+        
+        return response()->Json($resultado);
     }
 
 

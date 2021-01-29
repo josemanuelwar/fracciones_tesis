@@ -54,7 +54,7 @@
                 <div class="card  text-white mb-4" style="background-color:#FFD5B3">
                     <div class="card-body">AGREGAR TEMA</div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="">TEMA</a>
+                        <a class="small text-white stretched-link" href="{{route('temas')}}">TEMA</a>
                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                     </div>
                 </div>

@@ -109,7 +109,8 @@ export default {
             bandE:false,
             mesaje:"",
             Materiaslis:[],
-            idtema:0
+            idtema:0,
+            idanterior:0
         }
     },
     methods:{
@@ -160,6 +161,7 @@ export default {
             me.abreviatura=siglas;
             me.idgrado=idgrado;
             me.idtema=id;
+            me.idanterior=idgrado;
             this.$modal.show('editar');
 
         },
@@ -178,9 +180,19 @@ export default {
             let me=this;
             let url="/ActulizarMaterias";
             axios.post(url,{'nombremateria':me.materias,'idmateria':me.idtema,
-                            'abreviatura':me.abreviatura,'idgrado':me.idgrado}).then(
+                            'abreviatura':me.abreviatura,'idgrado':me.idgrado,
+                            'idgradoanterior':me.idanterior}).then(
             response =>{
                 console.log(response);
+                if(response.data == true){
+                    me.band=true;
+                    me.mesaje="Se ha actualizado correctamente la materias";
+                    this.listaMaterias()
+                    this.censelar();
+                }else{
+                    me.bandE=true;
+                    me.mesaje="Ha ocurrido un error al actualizar la materia";
+                }
             }).catch(error=>{
                 console.log(error);
             });

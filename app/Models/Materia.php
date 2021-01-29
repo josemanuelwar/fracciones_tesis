@@ -29,4 +29,21 @@ class Materia extends Model
             ->get();
         return $materia;    
     }
+
+    public function actualizarMateria($idmateria,$data,$idgrado,$idgradoAnt)
+    {
+       $updateMat=DB::table('materias')
+                    ->where('id',$idmateria)
+                    ->update($data);
+       $updateGra=DB::table('materias_has_grados')
+                            ->where('materias_id',$idmateria)
+                            ->where('grados_id',$idgradoAnt)
+                            ->update(['grados_id'=>$idgrado]);
+        if($updateMat == true || $updateGra == true){
+            return true;
+        }
+        else return false;
+
+    }
+    
 }

@@ -2519,7 +2519,8 @@ __webpack_require__.r(__webpack_exports__);
       bandE: false,
       mesaje: "",
       Materiaslis: [],
-      idtema: 0
+      idtema: 0,
+      idanterior: 0
     };
   },
   methods: {
@@ -2571,6 +2572,7 @@ __webpack_require__.r(__webpack_exports__);
       me.abreviatura = siglas;
       me.idgrado = idgrado;
       me.idtema = id;
+      me.idanterior = idgrado;
       this.$modal.show('editar');
     },
     censelar: function censelar() {
@@ -2584,6 +2586,8 @@ __webpack_require__.r(__webpack_exports__);
       me.idgrado = 1;
     },
     editarMateria: function editarMateria(e) {
+      var _this2 = this;
+
       e.preventDefault();
       var me = this;
       var url = "/ActulizarMaterias";
@@ -2591,9 +2595,22 @@ __webpack_require__.r(__webpack_exports__);
         'nombremateria': me.materias,
         'idmateria': me.idtema,
         'abreviatura': me.abreviatura,
-        'idgrado': me.idgrado
+        'idgrado': me.idgrado,
+        'idgradoanterior': me.idanterior
       }).then(function (response) {
         console.log(response);
+
+        if (response.data == true) {
+          me.band = true;
+          me.mesaje = "Se ha actualizado correctamente la materias";
+
+          _this2.listaMaterias();
+
+          _this2.censelar();
+        } else {
+          me.bandE = true;
+          me.mesaje = "Ha ocurrido un error al actualizar la materia";
+        }
       })["catch"](function (error) {
         console.log(error);
       });
