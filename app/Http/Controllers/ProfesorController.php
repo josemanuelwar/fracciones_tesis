@@ -116,7 +116,11 @@ class ProfesorController extends Controller
        $lista=$materia->getMaterias(auth()->user()->escuelas_id);
        return response()->Json($lista);
     }
-
+    /**
+     * actualizamos la materias
+     * @param(idmateria,nombre,siglas,idgrado,idanterir)
+     * esto son los parametros
+     */
     public function ActulizarMateria(Request $request)
     {
         $validation=$request->validate([

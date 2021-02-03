@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Persona;
 use App\Models\Escuela;
+use App\Models\Materia;
+use App\Models\Tema;
 
 use App\Models\grado_primaria;
-use App\Models\temas;
 use App\Models\preguntas;
 use Illuminate\Support\Facades\Hash;
 use App\Imports\UsersImport;
@@ -94,41 +95,46 @@ class HomeController extends Controller
     /** mandamos la lista de grado que estan en la base de datos */
     public function ListaGardosVue()
     {
-        return grado_primaria::all();
+        $lista=new Materia();
+        $res=$lista->getMaterias(auth()->user()->escuelas_id);
+        return $res;
         
     }
     /** mandamos los datos a la vista */
     public function verListatemas()
     {
 
-        return grado_primaria::with('temas')->get();
+        $temas=new Tema();
+        $listatemas=$temas->getTemas(auth()->user()->escuelas_id);
+        return json_encode($listatemas);
     }
     /** guarda mos los datos en la base de dats */
     public function guardarTemas(Request $request)
     {
         $validacion=$request->validate([
             'tema' => 'required|max:60',
-            'idgrado' => 'required|max:60',
+            'idgrado' => 'required|max:11',
+            'pregnum' => 'required|max:11'
         ]);
 
-        $temas=new temas();
-        $temas->nombre_tema=$request->post('tema');
-        $temas->usuario_id=auth()->user()->id;
-        $temas->grado_primaria_id=$request->post('idgrado');
+        $temas=new Tema();
+        $temas->nombre_tema=$validacion['tema'];
+        $temas->numerodepreguntas=$validacion['pregnum'];
+        $temas->materias_id=$validacion['idgrado'];
         $temas->save();
 
         return json_encode(true);
     }
    /** cargamos la vista  */
-    public function preguntas()
+    public function preguntas(Request $request ,$id=null)
     {
-        return view('profesor.agregarpreguntas');
+        $resu=Tema::where('id',$id)->get();          
+        return view('profesor.agregarpreguntas')->with('temas',$resu);
     }
 
     public function ListaTemas($id)
     {
-        $temas=temas::where('grado_primaria_id',$id)->get();
-            return json_encode($temas);    
+            
     }
     /** solo cargar la vista del formulario para el exel */
     public function FormulariocargarExel()

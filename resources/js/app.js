@@ -17,6 +17,8 @@ Vue.component('pregunta-component',require('./components/admin/PreguntasComponen
 Vue.component('alumno-component',require('./components/admin/AlumnoslisComponent.vue').default);
 Vue.component('escuela-component',require('./components/admin/RegistarEscuelaComponent.vue').default);
 Vue.component('materia-component',require('./components/admin/MateriaComponent.vue').default);
+// Vue.component('varibles-componet',{props:['commentIds'],
+// template:'<pregunta-component></pregunta-component>'},require('./components/admin/varibles/variblesComponent.vue').default);
 // Vue.component('alumnos-component',require('./components/admin/listaalumnosComponent.vue').default);
 const app = new Vue({
     el: '#app',

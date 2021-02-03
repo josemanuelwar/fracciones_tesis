@@ -2077,16 +2077,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       temario: "",
-      idgardo: "1",
+      idgardo: 1,
       listagardos: [],
       listatema: [],
       idtema: 0,
       status: false,
       mesaje: "",
+      numpregun: "",
+      urlpre: "/Agregarpreguntas/",
       urleditar: "www.google.com"
     };
   },
@@ -2107,7 +2111,7 @@ __webpack_require__.r(__webpack_exports__);
       var url = '/listaTemas';
       axios.get(url).then(function (response) {
         //creamos un array y guardamos el contenido que nos devuelve el response
-        me.listatema = response.data;
+        me.listatema = response.data; // console.log(me.listatema);
       })["catch"](function (error) {
         // handle error
         console.log(error);
@@ -2119,7 +2123,8 @@ __webpack_require__.r(__webpack_exports__);
       var url = "/guardarTemas";
       axios.post(url, {
         'tema': me.temario,
-        'idgrado': me.idgardo
+        'idgrado': me.idgardo,
+        'pregnum': me.numpregun
       }).then(function (response) {
         if (response.data) {
           me.getListatemas();
@@ -2659,99 +2664,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
  // import MathType from '@wiris/mathtype-ckeditor5';
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['initialCounter'],
   data: function data() {
     return {
-      idgrado: 1,
-      listagardos: [],
-      idtema: 1,
-      audio: "",
-      preguntas: "",
-      listatemas: [],
-      editor: _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_0___default.a,
-      editorData: '<p>Content of the editor.</p>',
-      editorConfig: {// plugins: [ MathType],
-        // toolbar: [ 'MathType', 'ChemType', ... ]     
-      }
+      Temas: []
     };
   },
   methods: {
-    getgrado: function getgrado() {
+    getTemas: function getTemas() {
       var me = this;
-      var url = '/lista';
+      var url = "/Agregarpreguntas";
       axios.get(url).then(function (response) {
-        //creamos un array y guardamos el contenido que nos devuelve el response
-        me.listagardos = response.data; // console.log(me.listagardos);
-      })["catch"](function (error) {
-        // handle error
-        console.log(error);
-      });
-    },
-    signalChange: function signalChange() {
-      var me = this;
-      var url = '/listatemasgrado/' + me.idgrado;
-      axios.get(url).then(function (response) {
-        me.listatemas = response.data;
-        console.log(me.listatemas);
+        console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
-    },
-    getImage: function getImage(even) {
-      var me = this;
-      me.audio = even.target.files[0];
-    },
-    guardarpregunta: function guardarpregunta(e) {
-      e.preventDefault();
-      var me = this;
-      var url = '/GuardarPreguntas';
-      var data = new FormData();
-      data.append('imagen', me.audio);
-      data.append('idtema', me.idtema);
-      data.append('pregunta', me.editorData);
-      axios.post(url, data).then(function (response) {
-        console.log(response.data);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-      console.log(data);
     }
   },
   mounted: function mounted() {
-    this.getgrado();
-    this.signalChange();
+    this.getTemas();
   }
 });
 
@@ -39246,7 +39180,8 @@ var render = function() {
                 attrs: {
                   type: "text",
                   id: "text",
-                  placeholder: "aprendiendo fraciones"
+                  placeholder: "aprendiendo fraciones",
+                  required: ""
                 },
                 domProps: { value: _vm.temario },
                 on: {
@@ -39262,7 +39197,7 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
               _c("label", { attrs: { for: "grado" } }, [
-                _vm._v("Seleciona un grado")
+                _vm._v("Seleciona un materia")
               ]),
               _vm._v(" "),
               _c(
@@ -39277,6 +39212,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
+                  attrs: { required: "" },
                   on: {
                     change: function($event) {
                       var $$selectedVal = Array.prototype.filter
@@ -39309,6 +39245,8 @@ var render = function() {
                       [
                         _vm._v(
                           "\n                            " +
+                            _vm._s(lis.nombremateria) +
+                            "--" +
                             _vm._s(lis.nombregrado) +
                             "\n                        "
                         )
@@ -39320,94 +39258,92 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("input", { attrs: { type: "submit", value: "Guardar" } })
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "numero" } }, [
+                _vm._v("Ingresa el numero de preguntas")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.numpregun,
+                    expression: "numpregun"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  name: "numero",
+                  max: "100",
+                  min: "1",
+                  required: ""
+                },
+                domProps: { value: _vm.numpregun },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.numpregun = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.numpregun) +
+                  "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              staticClass: "btn btn-outline-primary",
+              attrs: { type: "submit", value: "Guardar" }
+            })
           ]
         ),
         _vm._v(" "),
         _c("hr"),
         _vm._v(" "),
-        _c(
-          "table",
-          { staticClass: "table table-bordered" },
-          [
+        _c("div", { staticClass: "table-responsive" }, [
+          _c("table", { staticClass: "table table-bordered" }, [
             _vm._m(0),
             _vm._v(" "),
-            _vm._l(_vm.listatema, function(lis) {
-              return _c(
-                "tbody",
-                { key: lis.id },
-                _vm._l(lis.temas, function(temas) {
-                  return _c("tr", { key: temas.id }, [
-                    lis.temas.length > 0
-                      ? _c("td", [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(lis.nombregrado) +
-                              "\n                        "
-                          )
-                        ])
-                      : _vm._e(),
+            _c(
+              "tbody",
+              _vm._l(_vm.listatema, function(item, index) {
+                return _c("tr", { key: index }, [
+                  _c("td", [_vm._v(_vm._s(item.nombregrado))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.nombre_tema))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.numerodepreguntas))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-outline-success",
+                        attrs: { href: _vm.urlpre + item.id }
+                      },
+                      [_vm._v("Agregar pregunta")]
+                    ),
                     _vm._v(" "),
-                    lis.temas.length > 0
-                      ? _c("td", [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(temas.nombre_tema) +
-                              "    \n                        "
-                          )
-                        ])
-                      : _vm._e(),
+                    _c("button", { staticClass: "btn btn-outline-primary" }, [
+                      _vm._v("Editar")
+                    ]),
                     _vm._v(" "),
-                    lis.temas.length > 0
-                      ? _c("td", [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "btn-group",
-                              attrs: {
-                                role: "group",
-                                "aria-label": "Basic example"
-                              }
-                            },
-                            [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-primary",
-                                  attrs: { type: "button" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.ModalEditar(
-                                        temas.id,
-                                        temas.nombre_tema,
-                                        lis.id
-                                      )
-                                    }
-                                  }
-                                },
-                                [_vm._v("Editar")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-danger",
-                                  attrs: { type: "button" }
-                                },
-                                [_vm._v("Eliminar")]
-                              )
-                            ]
-                          )
-                        ])
-                      : _vm._e()
+                    _c("button", { staticClass: "btn btn-outline-danger" }, [
+                      _vm._v("Eliminar")
+                    ])
                   ])
-                }),
-                0
-              )
-            })
-          ],
-          2
-        ),
+                ])
+              }),
+              0
+            )
+          ])
+        ]),
         _vm._v(" "),
         _vm.listatema.length == 0
           ? _c("div", [_vm._v("\n            No hay informacion\n        ")])
@@ -39464,7 +39400,7 @@ var render = function() {
                   { staticClass: "form-group", staticStyle: { margin: "5px" } },
                   [
                     _c("label", { attrs: { for: "grado" } }, [
-                      _vm._v("Seleciona un grado")
+                      _vm._v("Seleciona un materia")
                     ]),
                     _vm._v(" "),
                     _c(
@@ -39511,6 +39447,8 @@ var render = function() {
                             [
                               _vm._v(
                                 "\n                            " +
+                                  _vm._s(lis.nombremateria) +
+                                  "--" +
                                   _vm._s(lis.nombregrado) +
                                   "\n                        "
                               )
@@ -39573,6 +39511,8 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Grado")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Temario")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Numero pregunta")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Acciones")])
       ])
@@ -40422,204 +40362,37 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c("div", { staticClass: "card-body" }, [
-      _c(
-        "form",
-        { attrs: { method: "post" }, on: { submit: _vm.guardarpregunta } },
-        [
-          _c("div", { staticClass: "mb-3" }, [
-            _c(
-              "label",
-              { staticClass: "form-label", attrs: { for: "grado" } },
-              [_vm._v("Selecionar grados")]
-            ),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.idgrado,
-                    expression: "idgrado"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { name: "grado", id: "grado" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.idgrado = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    _vm.signalChange
-                  ]
-                }
-              },
-              _vm._l(_vm.listagardos, function(index) {
-                return _c(
-                  "option",
-                  { key: index.id, domProps: { value: index.id } },
-                  [
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(index.nombregrado) +
-                        "\n                    "
-                    )
-                  ]
-                )
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "mb-3" }, [
-            _c("label", { staticClass: "form-label", attrs: { for: "tema" } }, [
-              _vm._v("Selecionar tema")
-            ]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.idtema,
-                    expression: "idtema"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { name: "tema", id: "tema" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.idtema = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              [
-                _vm.listatemas.length === 0
-                  ? _c("option", [
-                      _vm._v(
-                        "\n                        no hay Temas\n                    "
-                      )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm._l(_vm.listatemas, function(item, index) {
-                  return _c(
-                    "option",
-                    { key: index, domProps: { value: item.id } },
-                    [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(item.nombre_tema) +
-                          "\n                    "
-                      )
-                    ]
-                  )
-                })
-              ],
-              2
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "mb-3" },
-            [
-              _c(
-                "label",
-                { staticClass: "form-label", attrs: { for: "preguntas" } },
-                [_vm._v("Ingresa la Preguntas")]
-              ),
-              _vm._v(" "),
-              _c("ckeditor", {
-                staticStyle: {},
-                attrs: { editor: _vm.editor, config: _vm.editorConfig },
-                model: {
-                  value: _vm.editorData,
-                  callback: function($$v) {
-                    _vm.editorData = $$v
-                  },
-                  expression: "editorData"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "mb-3" }, [
-            _c(
-              "label",
-              { staticClass: "form-label", attrs: { for: "audio" } },
-              [_vm._v("Selecciona Audio o Video")]
-            ),
-            _vm._v(" "),
-            _c("input", {
-              attrs: { type: "file", name: "image", accept: "image/*" },
-              on: { change: _vm.getImage }
-            })
-          ]),
-          _vm._v(" "),
-          _c("input", { attrs: { type: "submit", value: "Guardar" } })
-        ]
-      ),
-      _vm._v(" "),
-      _c("hr"),
-      _vm._v(" "),
-      _vm._m(1)
-    ])
-  ])
+  return _vm._m(0)
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h1", [_vm._v("Preguntas")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("table", { staticClass: "table" }, [
-      _c("thead", [
-        _c("tr", [
-          _c("th", { attrs: { scope: "col" } }, [_vm._v("Tema")]),
-          _vm._v(" "),
-          _c("th", { attrs: { scope: "col" } }, [_vm._v("Preguntas")]),
-          _vm._v(" "),
-          _c("th", { attrs: { scope: "col" } }, [_vm._v("Acciones")])
-        ])
+    return _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-header" }, [
+        _c("h1", [_vm._v("Preguntas")])
       ]),
       _vm._v(" "),
-      _c("tbody")
+      _c("div", { staticClass: "card-body" }, [
+        _c("form", { attrs: { method: "post" } }),
+        _vm._v(" "),
+        _c("hr"),
+        _vm._v(" "),
+        _c("table", { staticClass: "table" }, [
+          _c("thead", [
+            _c("tr", [
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Tema")]),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Preguntas")]),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Acciones")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("tbody")
+        ])
+      ])
     ])
   }
 ]
@@ -53800,7 +53573,9 @@ Vue.component('lista-component', __webpack_require__(/*! ./components/Listatemar
 Vue.component('pregunta-component', __webpack_require__(/*! ./components/admin/PreguntasComponent.vue */ "./resources/js/components/admin/PreguntasComponent.vue")["default"]);
 Vue.component('alumno-component', __webpack_require__(/*! ./components/admin/AlumnoslisComponent.vue */ "./resources/js/components/admin/AlumnoslisComponent.vue")["default"]);
 Vue.component('escuela-component', __webpack_require__(/*! ./components/admin/RegistarEscuelaComponent.vue */ "./resources/js/components/admin/RegistarEscuelaComponent.vue")["default"]);
-Vue.component('materia-component', __webpack_require__(/*! ./components/admin/MateriaComponent.vue */ "./resources/js/components/admin/MateriaComponent.vue")["default"]); // Vue.component('alumnos-component',require('./components/admin/listaalumnosComponent.vue').default);
+Vue.component('materia-component', __webpack_require__(/*! ./components/admin/MateriaComponent.vue */ "./resources/js/components/admin/MateriaComponent.vue")["default"]); // Vue.component('varibles-componet',{props:['commentIds'],
+// template:'<pregunta-component></pregunta-component>'},require('./components/admin/varibles/variblesComponent.vue').default);
+// Vue.component('alumnos-component',require('./components/admin/listaalumnosComponent.vue').default);
 
 var app = new Vue({
   el: '#app'

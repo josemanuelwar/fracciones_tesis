@@ -16,7 +16,7 @@ Route::post('/registroalum', [App\Http\Controllers\HomeController::class, 'Gusrd
 //temarios
 Route::get('/AgregarTema', [App\Http\Controllers\HomeController::class, 'Agregartemarios'])->name('temas');
 //preguntas
-Route::get('/Agregarpreguntas', [App\Http\Controllers\HomeController::class, 'preguntas'])->name('temas1');
+Route::get('/Agregarpreguntas/{id?}', [App\Http\Controllers\HomeController::class, 'preguntas'])->name('temas1');
 //retornamos la vista del formulario para cargar el archivo exel
 Route::get('/importar-excel',[App\Http\Controllers\HomeController::class, 'FormulariocargarExel'])->name('Cargr-exel');
 //ruta para importar el exel
@@ -29,7 +29,9 @@ Route::post('/Actulizar',[App\Http\Controllers\HomeController::class, 'editarAlu
 //rutas para vue
 Route::get('/lista',[App\Http\Controllers\HomeController::class, 'ListaGardosVue']);
 Route::get('/listaTemas',[App\Http\Controllers\HomeController::class, 'verListatemas']);
+
 Route::post('/guardarTemas',[App\Http\Controllers\HomeController::class, 'guardarTemas']);
+
 Route::get('/listatemasgrado/{id}',[App\Http\Controllers\HomeController::class, 'ListaTemas']);
 Route::post('/EditarTema',[App\Http\Controllers\HomeController::class,'EditarTema']);
 Route::post('/GuardarPreguntas',[App\Http\Controllers\HomeController::class,'GuardarPreguntas']);

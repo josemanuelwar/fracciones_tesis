@@ -76,7 +76,7 @@
                             <div class="collapse" id="collapseTemas" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="{{route('temas')}}">Agregar Temas</a>
-                                    <a class="nav-link" href="{{route('temas1')}}">Agregar Preguntas</a>
+                                    {{-- <a class="nav-link" href="{{route('temas1')}}">Agregar Preguntas</a> --}}
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
