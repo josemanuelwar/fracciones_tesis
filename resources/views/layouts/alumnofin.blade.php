@@ -8,6 +8,7 @@
 </body>
 </html>
 <script src="{{asset('admin/js/jquery-3.5.1.js')}}" crossorigin="anonymous"></script>
+<script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
 <script>
     $.ajaxSetup({
             headers: {
