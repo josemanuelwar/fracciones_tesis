@@ -23,4 +23,9 @@ class Tema extends Model
                     ->get();
         return $temas;             
     }
+
+    public function updateTema($id,$data)
+    {
+        $temas=DB::table('temas')->where('id',$id)->update(['numerodepreguntas'=>$data]);
+    }
 }

@@ -27,7 +27,6 @@
                 <div class="form-group">
                     <label for="numero">Ingresa el numero de preguntas</label>
                     <input type="number" name="numero" class="form-control" v-model="numpregun" max="100" min="1" required/>
-                        {{numpregun}}
                 </div>
                 <input type="submit" value="Guardar" class="btn btn-outline-primary">
             </form>    
@@ -49,7 +48,7 @@
                         <td>{{item.numerodepreguntas}}</td>
                         <td>
                             <a :href="urlpre+item.id" class="btn btn-outline-success">Agregar pregunta</a>
-                            <button class="btn btn-outline-primary">Editar</button>
+                            <button class="btn btn-outline-primary" @click="ModalEditar(item.id,item.numerodepreguntas,item.nombre_tema)">Editar</button>
                             <button class="btn btn-outline-danger">Eliminar</button>
                         </td>
                     </tr>
@@ -60,7 +59,7 @@
                 No hay informacion
             </div>    
 
-        <modal name="editar" :width="500" :height="350" :adaptive="true">
+        <modal name="editar" :width="500" :height="400" :adaptive="true">
             <hr>
                 <h3>Editar Tema</h3>
             <hr>
@@ -78,11 +77,15 @@
                              <option v-for="lis in listagardos" v-bind:value="lis.id"  v-bind:key="lis.id">
                                 {{ lis.nombremateria }}--{{lis.nombregrado}}
                             </option>
-                    </select>   
+                    </select>
+                    <div class="form-group">
+                        <label for="numero">Ingresa el numero de preguntas</label>
+                        <input type="number" name="numero" class="form-control" v-model="numpregun" max="100" min="1" required/>
+                    </div>   
                 </div>
                 <div class="modal-footer" style="margin:5px;">
                             <button type="submit" class="btn btn-primary" data-dismiss="modal" >Aceptar</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal" @click="Modealcerrar()">Canselar</button>
+                            <!-- <button type="button" class="btn btn-danger" data-dismiss="modal" @click="Modealcerrar()">Cancelar</button> -->
                 </div>
             </form>
         </modal>    
@@ -155,11 +158,13 @@
             },
             clerar(){
                 this.temario="";
+                this.idtema=0;
+                this.numpregun=0;
             },
-            ModalEditar(idtema,nombretema,idgrado){
+            ModalEditar(idtema,numerodepreguntas,nombretema){
                 let me=this;
+                me.numpregun=numerodepreguntas;
                 me.temario=nombretema;
-                me.idgardo=idgrado;
                 me.idtema=idtema;
                 this.$modal.show("editar");
             },
@@ -174,7 +179,8 @@
                 axios.post(url,{
                     'idtema':me.idtema,
                     'tema':me.temario,
-                    'idgardo':me.idgardo
+                    'idgardo':me.idgardo,
+                    'numpreg':me.numpregun
                 }).then(response=>{
                     if(response.data===1){
                         this.getListatemas(); 

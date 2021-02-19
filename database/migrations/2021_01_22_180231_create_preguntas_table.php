@@ -15,7 +15,7 @@ class CreatePreguntasTable extends Migration
     {
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id();
-            $table->string("reactivo");
+            $table->longText("reactivo");
             $table->enum('nivel',['facil','medio','dificil']);
             $table->unsignedBigInteger('temas_id');
             $table->foreign('temas_id')->references('id')->on('temas');

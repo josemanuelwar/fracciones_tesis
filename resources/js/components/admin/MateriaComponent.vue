@@ -124,6 +124,7 @@ export default {
                     me.band=true;
                     me.mesaje="Se ha guardado correctamente la materias";
                     this.clear();
+                    this.listaMaterias();
                 }else if(response.data === false){
                     me.bandE=true;
                     me.mesaje="Ha ocurrido un error al guardar la materia";
@@ -187,7 +188,7 @@ export default {
                 if(response.data == true){
                     me.band=true;
                     me.mesaje="Se ha actualizado correctamente la materias";
-                    this.listaMaterias()
+                    this.listaMaterias();
                     this.censelar();
                 }else{
                     me.bandE=true;

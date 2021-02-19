@@ -16,7 +16,7 @@ class CreateRespuestasTable extends Migration
         Schema::create('respuestas', function (Blueprint $table) {
             $table->id();
             $table->string("inciso");
-            $table->string("respuesta");
+            $table->longText("respuesta");
             $table->integer('corecta');
             $table->unsignedBigInteger('preguntas_id');
             $table->foreign('preguntas_id')->references('id')->on('preguntas');

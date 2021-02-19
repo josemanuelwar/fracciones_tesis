@@ -16,6 +16,7 @@ class Materia extends Model
     {
         return $this->morphedByMany(Escuela::class,'materia');
     }
+
     public function getMaterias($id)
     {
         # code...
@@ -44,6 +45,17 @@ class Materia extends Model
         }
         else return false;
 
+    }
+
+    public function materiagrado()
+    {
+        $materia=DB::table('materias')
+                    ->join('materias_has_grados','materias.id','=','materias_has_grados.materias_id')
+                    ->join('grados','grados.id','=','materias_has_grados.grados_id')
+                    ->select('materias.id','materias.nombremateria','materias.siglasmaterias','materias_has_grados.grados_id','grados.nombregrado')
+                    ->get();
+        
+        return $materia; 
     }
     
 }

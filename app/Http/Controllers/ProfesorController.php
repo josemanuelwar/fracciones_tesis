@@ -1,13 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Escuela;
 use App\Models\User;
 use App\Models\Materia;
 use App\Models\Materias_has_escuela;
 use App\Models\Grado;
+use App\Models\Pregunta;
+use App\Models\Respuesta;
 use Illuminate\Support\Facades\DB;
 class ProfesorController extends Controller
 {
@@ -20,7 +20,7 @@ class ProfesorController extends Controller
     {
         return view('profesor.registrarescuela');
     }
-
+    /** registramos la escuela */
     public function GaudarEscuela(Request $request)
     {
         $validacion=$request->validate([
@@ -38,7 +38,7 @@ class ProfesorController extends Controller
     {
        return Escuela::get();
     }
-
+    /**asignamos la escuela */
     public function AsignacionEscuela($id)
     {
        $usuarios = new User();
@@ -53,7 +53,7 @@ class ProfesorController extends Controller
     {
         return Escuela::find($id);
     }
-
+    /** actualizamos el registro de la escuela */
     public function UpdateEscuela(Request $request)
     {
        $validacion=$request->validate([
@@ -138,6 +138,86 @@ class ProfesorController extends Controller
         return response()->Json($resultado);
     }
 
+    public function Respuesta($id)
+    {
+        $res=Pregunta::where('id',$id)->get();        
+        return view("profesor.agregarRespuesta")->with('pregunta',$res);
+    }
 
+    public function GuardarRespuestas(Request $request)
+    {
+        $res=false;
+        $validation=$request->validate(['respuestas' => 'required',
+                                        'incisos' => 'required',
+                                        'idpregunta'=>'required']);
+        $respuesta=$validation['respuestas'];
+        $correcta= $validation['incisos'];
+        if($respuesta != null && $correcta != null){
+            $i=0;
+            foreach($respuesta as $res){
+                $res=Respuesta::create([ 'respuesta'=>$res,
+                                    'corecta'=>$correcta[$i],
+                                    'preguntas_id'=>$validation['idpregunta']]);
+                $i++;                    
+            }
+        }
+        return response()->Json(true);
+    }
 
+    public function vistaprevia($id)
+    {
+        $res=Pregunta::where('id',$id)->get(); 
+        $resp=Respuesta::where('preguntas_id',$id)->get();
+        $inciso=['A','B','C','D'];  
+        return view('profesor.Vistaprevia')->with('vista',$res)->with('respuesta',$resp)->with('inciso',$inciso);
+    }
+
+    public function Editarpregunta($id)
+    {
+        $res=Pregunta::where('id',$id)->get(); 
+        $resp=Respuesta::where('preguntas_id',$id)->get();
+        return view('profesor.EditarPregun')->with('pregunta',$res)
+                ->with('respuestas',$resp);
+    }
+
+    public function ActualizarPreguntas(Request $request)
+    {
+        $validation=$request->validate(['respuest'=>'required|array',
+                    'preguntas'=>'required|array',
+                    'respuestacorecta'=>'required|array']);
+        $preguntas=$validation['preguntas'];
+        $respuesta=$validation['respuest'];
+        $corecta=$validation['respuestacorecta'];
+        /**preguntas */
+        $preg = new Pregunta();
+            $update=$preg->find($preguntas['idpregunta']);
+            $update->reactivo=$preguntas['pregunsta'];
+            $update->nivel=$preguntas['nivel'];
+            $update->save();
+        $res = new Respuesta();
+            $update=$res->find($respuesta['idrespuestaA']);
+            $update->respuesta=$respuesta['respuestaA'];
+            $update->corecta=$corecta[0];
+            $update->preguntas_id=$preguntas['idpregunta'];
+            $update->save();
+            
+            $update=$res->find($respuesta['idrespuestaB']);
+            $update->respuesta=$respuesta['respuestaB'];
+            $update->corecta=$corecta[1];
+            $update->preguntas_id=$preguntas['idpregunta'];
+            $update->save();
+
+            $update=$res->find($respuesta['idrespuestaC']);
+            $update->respuesta=$respuesta['respuestaC'];
+            $update->corecta=$corecta[2];
+            $update->preguntas_id=$preguntas['idpregunta'];
+            $update->save();
+
+            $update=$res->find($respuesta['idrespuestaD']);
+            $update->respuesta=$respuesta['respuestaD'];
+            $update->corecta=$corecta[3];
+            $update->preguntas_id=$preguntas['idpregunta'];
+            $update->save();       
+        return response()->Json(true);        
+    }
 }

@@ -2079,6 +2079,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2136,11 +2139,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     clerar: function clerar() {
       this.temario = "";
+      this.idtema = 0;
+      this.numpregun = 0;
     },
-    ModalEditar: function ModalEditar(idtema, nombretema, idgrado) {
+    ModalEditar: function ModalEditar(idtema, numerodepreguntas, nombretema) {
       var me = this;
+      me.numpregun = numerodepreguntas;
       me.temario = nombretema;
-      me.idgardo = idgrado;
       me.idtema = idtema;
       this.$modal.show("editar");
     },
@@ -2157,7 +2162,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(url, {
         'idtema': me.idtema,
         'tema': me.temario,
-        'idgardo': me.idgardo
+        'idgardo': me.idgardo,
+        'numpreg': me.numpregun
       }).then(function (response) {
         if (response.data === 1) {
           _this.getListatemas();
@@ -2640,27 +2646,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @ckeditor/ckeditor5-build-classic */ "./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js");
 /* harmony import */ var _ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_ckeditor_ckeditor5_build_classic__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -39289,12 +39274,7 @@ var render = function() {
                     _vm.numpregun = $event.target.value
                   }
                 }
-              }),
-              _vm._v(
-                "\n                    " +
-                  _vm._s(_vm.numpregun) +
-                  "\n            "
-              )
+              })
             ]),
             _vm._v(" "),
             _c("input", {
@@ -39330,9 +39310,22 @@ var render = function() {
                       [_vm._v("Agregar pregunta")]
                     ),
                     _vm._v(" "),
-                    _c("button", { staticClass: "btn btn-outline-primary" }, [
-                      _vm._v("Editar")
-                    ]),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outline-primary",
+                        on: {
+                          click: function($event) {
+                            return _vm.ModalEditar(
+                              item.id,
+                              item.numerodepreguntas,
+                              item.nombre_tema
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v("Editar")]
+                    ),
                     _vm._v(" "),
                     _c("button", { staticClass: "btn btn-outline-danger" }, [
                       _vm._v("Eliminar")
@@ -39352,7 +39345,7 @@ var render = function() {
         _c(
           "modal",
           {
-            attrs: { name: "editar", width: 500, height: 350, adaptive: true }
+            attrs: { name: "editar", width: 500, height: 400, adaptive: true }
           },
           [
             _c("hr"),
@@ -39457,7 +39450,41 @@ var render = function() {
                         })
                       ],
                       2
-                    )
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "numero" } }, [
+                        _vm._v("Ingresa el numero de preguntas")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.numpregun,
+                            expression: "numpregun"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "number",
+                          name: "numero",
+                          max: "100",
+                          min: "1",
+                          required: ""
+                        },
+                        domProps: { value: _vm.numpregun },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.numpregun = $event.target.value
+                          }
+                        }
+                      })
+                    ])
                   ]
                 ),
                 _vm._v(" "),
@@ -39475,20 +39502,6 @@ var render = function() {
                         attrs: { type: "submit", "data-dismiss": "modal" }
                       },
                       [_vm._v("Aceptar")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger",
-                        attrs: { type: "button", "data-dismiss": "modal" },
-                        on: {
-                          click: function($event) {
-                            return _vm.Modealcerrar()
-                          }
-                        }
-                      },
-                      [_vm._v("Canselar")]
                     )
                   ]
                 )
@@ -40362,40 +40375,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div")
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _c("h1", [_vm._v("Preguntas")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("form", { attrs: { method: "post" } }),
-        _vm._v(" "),
-        _c("hr"),
-        _vm._v(" "),
-        _c("table", { staticClass: "table" }, [
-          _c("thead", [
-            _c("tr", [
-              _c("th", { attrs: { scope: "col" } }, [_vm._v("Tema")]),
-              _vm._v(" "),
-              _c("th", { attrs: { scope: "col" } }, [_vm._v("Preguntas")]),
-              _vm._v(" "),
-              _c("th", { attrs: { scope: "col" } }, [_vm._v("Acciones")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("tbody")
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

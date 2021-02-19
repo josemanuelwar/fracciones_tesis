@@ -8,9 +8,9 @@ use App\Models\Persona;
 use App\Models\Escuela;
 use App\Models\Materia;
 use App\Models\Tema;
+use App\Models\Pregunta;
 
 use App\Models\grado_primaria;
-use App\Models\preguntas;
 use Illuminate\Support\Facades\Hash;
 use App\Imports\UsersImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -128,13 +128,11 @@ class HomeController extends Controller
    /** cargamos la vista  */
     public function preguntas(Request $request ,$id=null)
     {
-        $resu=Tema::where('id',$id)->get();          
-        return view('profesor.agregarpreguntas')->with('temas',$resu);
-    }
-
-    public function ListaTemas($id)
-    {
-            
+        $resu=Tema::where('id',$id)->get(); 
+        $preguntas=Pregunta::get();         
+        return view('profesor.agregarpreguntas')
+                ->with('temas',$resu)
+                ->with('preguntas',$preguntas);
     }
     /** solo cargar la vista del formulario para el exel */
     public function FormulariocargarExel()
@@ -217,10 +215,6 @@ class HomeController extends Controller
         // dd($datos);
     }
     
-    public function EliminarUsuario(Request $request)
-    {
-        
-    }
     /**
      * Editamos los temas si se equivocal en la siganacion
      */
@@ -231,34 +225,38 @@ class HomeController extends Controller
             $validacion=$request->validate([
                 'idtema'=>'required|max:60',
                 'tema'=>'required|max:60',
-                'idgardo'=>'required|max:60'
+                'idgardo'=>'required|max:60',
+                'numpreg'=>'required|max:60'
             ]);
-            $id=$request->post('idtema');
-            $data = array('nombre_tema' => $request->post('tema'),
-                        'usuario_id'=>auth()->user()->id,
-                    'grado_primaria_id'=>$request->post('idgardo'));
-             $resu=temas::where('id',$id)->update($data);
+            $data = array('nombre_tema' =>$validacion['tema'] ,
+                        'numerodepreguntas'=>$validacion['numpreg'],
+                    'materias_id'=>$validacion['idgardo']);
+             $resu=Tema::where('id',$validacion['idtema'])->update($data);
             return json_encode($resu);
         }        
     }
-
+    /** guardamo las preguntas de los temas */
     public function GuardarPreguntas(Request $request)
     {
-        $pregun= new preguntas();
+        $validatio=$request->validate([
+         'idTema' => 'required|max:60',
+         'preguntas' => 'required|min:10',
+         'nivel' => 'required|max:10 |min:4',
+         'numero' => 'required'
+        ]);
+        $pregunta= new Pregunta();
+        $pregunta->reactivo = $validatio['preguntas'];
+        $pregunta->nivel = $validatio['nivel'];
+        $pregunta->temas_id = $validatio['idTema'];
+        $pregunta->save();
         
-        $pregun->pregunta=$request->post('pregunta');
-        if($request->hasFile('imagen'))
-        {
-            $pregun->urlimage=$request->file('imagen')->store('public');
-        }
-        $pregun->id_temas=$request->post('idtema');
-        $pregun->save();
-        
-       
-            return json_encode("holas");
-        
-        
-    }
+        $numeropregunta=$validatio['numero'];
+        $total=$numeropregunta-1;
 
-    
+        $tema = new Tema();
+        $id=$validatio['idTema'];
+        $tema->updateTema($id,$total);
+        
+        return back()->with('message','Se ha gauradado correctamente');    
+    }    
 }

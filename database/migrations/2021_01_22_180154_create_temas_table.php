@@ -15,7 +15,7 @@ class CreateTemasTable extends Migration
     {
         Schema::create('temas', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre_tema");
+            $table->longText("nombre_tema");
             $table->integer('numerodepreguntas');
             $table->unsignedBigInteger('materias_id');
             $table->foreign('materias_id')->references('id')->on('materias');
