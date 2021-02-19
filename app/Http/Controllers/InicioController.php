@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Materia;
 use App\Models\Tema;
 use App\Models\Pregunta;
+use App\Models\Respuesta;
 class InicioController extends Controller
 {
     public function index()
@@ -24,5 +25,17 @@ class InicioController extends Controller
     public function preguntas($id)
     {
         return view('alumnos.preguntas')->with('idtemario',$id);
+    }
+
+    public function preguntasajax($id)
+    {
+        $resutado=Pregunta::where('temas_id',$id)->get();
+        return $resutado;
+    }
+
+    public function respuestas($id)
+    {
+        $resutado=Respuesta::where('preguntas_id',$id)->get();
+        return $resutado;
     }
 }

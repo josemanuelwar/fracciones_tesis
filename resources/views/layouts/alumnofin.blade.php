@@ -8,3 +8,10 @@
 </body>
 </html>
 <script src="{{asset('admin/js/jquery-3.5.1.js')}}" crossorigin="anonymous"></script>
+<script>
+    $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+    });
+ </script>

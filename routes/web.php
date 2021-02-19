@@ -62,8 +62,11 @@ Route::post('/Actualisapre',[App\Http\Controllers\ProfesorController::class,'Act
 /** comiensa en las rutas del alumno */
 /**temarios */
 Route::get('/Temarios/{id}',[App\Http\Controllers\InicioController::class,'Temarios'])->name('Temasaul');
-Route::get('/Preguntas/{id}',[App\Http\Controllers\InicioController::class,'preguntas'])->name('preguntasalu');
 
+Route::get('/Preguntas/{id}',[App\Http\Controllers\InicioController::class,'preguntas'])->name('preguntasalu');
+Route::get('/preguntasa_jax/{id}',[App\Http\Controllers\InicioController::class,'preguntasajax'])->name('precuntasajax');
+
+Route::get('/respuestas_ajax/{id}',[App\Http\Controllers\InicioController::class,'respuestas'])->name('respuesta_ajax');
 
 
 
