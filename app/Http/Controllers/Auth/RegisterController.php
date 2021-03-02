@@ -50,7 +50,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        
+
         return Validator::make($data, [
             'nombre' => ['required', 'string', 'max:255'],
             'app' => ['required', 'string', 'max:255'],
@@ -76,10 +76,11 @@ class RegisterController extends Controller
         $usuarios->apellido_paterno = $data['app'];
         $usuarios->apellido_materno = $data['apm'];
         $usuarios->direccion = $data['direccion'];
+        $usuarios->eliminarper=1;
         $usuarios->save();
 
         $idpersona = Persona::latest('id')->first();
-        //  var_dump($idpersona);die;   
+        //  var_dump($idpersona);die;
         return User::create([
             'nombre_usuario' => $data['nikename'],
             'email' => $data['email'],

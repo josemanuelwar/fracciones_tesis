@@ -9,11 +9,10 @@ use App\Models\Pregunta;
 use App\Models\Respuesta;
 class InicioController extends Controller
 {
-    public function index()
+    public function __construct()
     {
-        $materias = new Materia();
-        $resul=$materias->materiagrado();
-        return view('welcome')->with("materias",$resul);
+        
+        $this->middleware(['auth','roles']);
     }
 
     public function Temarios($id)

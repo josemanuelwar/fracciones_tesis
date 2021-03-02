@@ -13,6 +13,7 @@ class Persona extends Model
         'apellido_paterno',
         'apellido_materno',
         'direccion',
+        'eliminarper'
     ];
 
 
@@ -22,6 +23,7 @@ class Persona extends Model
                     ->join('users','personas.id','=','users.personas_id')
                     ->join('escuelas','users.escuelas_id','=','escuelas.id')
                     ->where('users.users_id',$id)
+                    ->where('escuelas.Eliminar',1)
                     ->select('personas.id','personas.nombrecompleto','personas.apellido_paterno','personas.apellido_materno','personas.direccion',
                     'users.email','escuelas.nombre_escuela')
                     ->get();
@@ -34,6 +36,7 @@ class Persona extends Model
                 ->join('users','personas.id','=','users.personas_id')
                 ->join('escuelas','users.escuelas_id','=','escuelas.id')
                 ->where('personas.id',$id)
+                ->where('escuelas.Eliminar',1)
                 ->select('personas.id','personas.nombrecompleto','personas.apellido_paterno','personas.apellido_materno','personas.direccion',
                     'users.email','users.escuelas_id')
                     ->get();

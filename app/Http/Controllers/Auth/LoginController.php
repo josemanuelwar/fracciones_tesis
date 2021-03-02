@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -26,15 +25,38 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+
+
+     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
+
+    public function index()
+    {
+        # code...
+        return view('auth.login');
+    }
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectPath()
+    {
+        if (auth()->user()->roles_id === 1) {
+            return '';
+        }
+        if(auth()->user()->roles_id === 2){
+            // dd(auth()->user()->roles_id);
+            return '/profesor';
+        }
+        if (auth()->user()->roles_id === 3) {
+            return '/alumnosinicio';
+            // dd(auth()->user()->roles_id);
+        }
     }
 }

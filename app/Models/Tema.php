@@ -9,7 +9,7 @@ class Tema extends Model
 {
     use HasFactory;
 
-    protected $fillable=['nombre_tema','numerodepreguntas','materias_id'];
+    protected $fillable=['nombre_tema','numerodepreguntas','materias_id','rutavideo','eliminartemas'];
 
     public function getTemas($id)
     {

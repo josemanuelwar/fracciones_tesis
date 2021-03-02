@@ -19,9 +19,9 @@ class checkRoles
         if(auth()->user()->roles_id === 2){
             return $next($request);
         }elseif(auth()->user()->roles_id === 1){
-            redirect("/");
+            return $next($request);
         }elseif(auth()->user()->roles_id === 3){
-            redirect("/");
+            return $next($request);
         }
         return redirect("/");
     }

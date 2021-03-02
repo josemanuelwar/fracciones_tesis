@@ -4,11 +4,11 @@ use Illuminate\Http\Request;
 use App\Models\Escuela;
 use App\Models\User;
 use App\Models\Materia;
-use App\Models\Materias_has_escuela;
 use App\Models\Grado;
 use App\Models\Pregunta;
 use App\Models\Respuesta;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 class ProfesorController extends Controller
 {
     public function __construct()
@@ -18,26 +18,28 @@ class ProfesorController extends Controller
 
     public function index()
     {
-        return view('profesor.registrarescuela');
+        $resultado=Escuela::where('Eliminar',1)->get();
+        return view('profesor.registrarescuela')->with('Escuelas',$resultado);
     }
     /** registramos la escuela */
     public function GaudarEscuela(Request $request)
     {
         $validacion=$request->validate([
-            'nombreescuela'=>'required|max:100',
-            'direccion'=>'required|max:120'
+            'escuela'=>'required|max:100',
+            'direccion'=>'required|max:120',
+            'imagen'=>'required|image'
         ]);
+        
         $escuela=new Escuela();
-        $escuela->nombre_escuela=$request->post('nombreescuela');
-        $escuela->direccion=$request->post('direccion');
-        $res=$escuela->save();
-        return json_encode('true');
+        $escuela->nombre_escuela=$validacion['escuela'];
+        $escuela->direccion=$validacion['direccion'];
+        $escuela->rutaimagen=$request->file('imagen')->store('public/escuela');
+        $escuela->Eliminar=1;
+        $escuela->save();
+        return back()->with('success','Se ha guardado correctamente');
+        
     }
 
-    public function ListaEscuela()
-    {
-       return Escuela::get();
-    }
     /**asignamos la escuela */
     public function AsignacionEscuela($id)
     {
@@ -48,33 +50,54 @@ class ProfesorController extends Controller
        $actulizar->save();
         return json_encode(true);
     }
-
+    //retornamos  la escuela 
     public function getEscuela($id)
     {
         return Escuela::find($id);
     }
+
     /** actualizamos el registro de la escuela */
     public function UpdateEscuela(Request $request)
     {
        $validacion=$request->validate([
         'idEscuela'=>'required|max:11',
-        'nombreescuela'=>'required|max:100',
-        'direccion'=>'required|max:120'           
+        'escuelaeditar'=>'required|max:100',
+        'direccionediatra'=>'required|max:120',
+        'imageneditar'=>'image'           
        ]);
        $escuela=new Escuela();
-       $actualizar=$escuela->find($request->post('idEscuela'));
-       $actualizar->nombre_escuela=$request->post('nombreescuela');
-       $actualizar->direccion=$request->post('direccion');
+       $actualizar=$escuela->find($validacion['idEscuela']);
+       $actualizar->nombre_escuela=$validacion['escuelaeditar'];
+       $actualizar->direccion=$validacion['direccionediatra'];
+       if( $request->hasFile('imageneditar')){
+            Storage::delete($actualizar->rutaimagen);
+           $actualizar->rutaimagen=$request->file('imageneditar')->store('public/escuela');
+       }
        $actualizar->save();
-       return json_encode(true);
+       return back()->with('success','Se ha actualizado correctamente');
+    }
+
+    public function EliminarEscuela(Request $request)
+    {
+        $validacion=$request->validate([
+            'escuelaid'=>'required|max:11'         
+        ]);
+        $escuela=new Escuela();
+        $actualizar=$escuela->find($validacion['escuelaid']);
+        // dd($actualizar);
+        $actualizar->Eliminar=0;
+        $actualizar->save();
+        return back()->with('success','Se ha eliminado correctamente');
     }
 
     public function Matreria(Request $request)
     {
-        if($request->ajax()){
-            return Grado::get();
-        }
-        return view('profesor.RegistrarMateria');
+        $resultaad=Grado::get();
+        $materia= new Materia();
+        $lista=$materia->getMaterias(auth()->user()->escuelas_id);
+       
+        return view('profesor.RegistrarMateria')->with('grados',$resultaad)
+        ->with('lista',$lista);
     }
     /** funcion para guardar las materias
      * @param(nombre materia) @param(abreviatura) @param(grado_id)
@@ -83,14 +106,18 @@ class ProfesorController extends Controller
     {
         /** validamos que los campos son requeridos  */
         $validacion=$request->validate([
-            'nombreMateria'=>'required|max:60',
-            'abreviatura'=>'required|max:60',           
+            'materia'=>'required|max:60',
+            'abrebiatura'=>'required|max:60', 
+            'listagardos'  =>  'required|max:60',
+            'imagen'=>'required|image'
            ]);
     
         /** creamos objetos de los modelos y guardamos los datos  */    
         $materia=new Materia();
-        $materia->nombremateria=$validacion['nombreMateria'];
-        $materia->siglasmaterias = $validacion['abreviatura'];
+        $materia->nombremateria=$validacion['materia'];
+        $materia->siglasmaterias = $validacion['abrebiatura'];
+        $materia->urlimagenmat=$request->file('imagen')->store('public/Materia');
+        $materia->Eliminarmat=1;
         $materia->save();
         $materiaid=Materia::latest('id')->first();
 
@@ -99,22 +126,27 @@ class ProfesorController extends Controller
                                
         $res=DB::table('materias_has_escuelas')->insert($escuelmatera);
         $res1=DB::table('materias_has_grados')->insert(["materias_id"=>$materiaid['id'],
-        "grados_id"=>$request->post('idgrado')]);
+        "grados_id"=>$request->post('listagardos')]);
         if($res === true && $res1 === true){
-            return response()->Json(true);
+            return back()->with('success','Se ha guardado correctamente');
         }
         else
         {
-            return response()->Json(false);
+            return back()->with('danger','No se ha guardado correctamente');
         }
             
     }
     /** mostramos todo las materias  que tiene un usuario */
-    public function ListaMaterias()
+    public function eliminarMaterias(Request $request)
     {
-       $materia= new Materia();
-       $lista=$materia->getMaterias(auth()->user()->escuelas_id);
-       return response()->Json($lista);
+        $validation=$request->validate([
+            'materiaid'=>'required|max:11',
+        ]);
+        $mat=new Materia();
+        $elim=$mat->find($validation['materiaid']);
+        $elim->Eliminarmat=0;
+        $elim->save();
+        return back()->with('success','Se ha eliminado correctamente');
     }
     /**
      * actualizamos la materias
@@ -125,17 +157,38 @@ class ProfesorController extends Controller
     {
         $validation=$request->validate([
             'idmateria'=>'required|max:11',
-            'nombremateria'=>'required|max:100',
-            'abreviatura'=>'required|max:60',
-            'idgrado'=>'required|max:11',
-            'idgradoanterior'=>'required|max:11'           
+            'materiaeditar'=>'required|max:100',
+            'abrebiaturaeditar'=>'required|max:60',
+            'listagardoseditar'=>'required|max:11',
+            'idateriorgra'=>'required|max:11',
+            'imageneditar'=>'image',                 
            ]);
-        $data = array('nombremateria' => $validation['nombremateria'],
-                      'siglasmaterias'=>$validation['abreviatura']);
-        $updateMat = new Materia();
-        $resultado= $updateMat->actualizarMateria($validation['idmateria'],$data,$validation['idgrado'],$validation['idgradoanterior']);    
         
-        return response()->Json($resultado);
+        if($request->hasFile('imageneditar')){
+            $mat=new Materia();
+            $elim=$mat->find($validation['idmateria']);
+            Storage::delete($elim->urlimagenmat);
+            $data = array('nombremateria' => $validation['materiaeditar'],
+                      'siglasmaterias'=>$validation['abrebiaturaeditar'],
+                      'urlimagenmat'=>$request->file('imageneditar')->store('public/Materia')
+                    );
+        }else{
+            $data = array('nombremateria' => $validation['materiaeditar'],
+                      'siglasmaterias'=>$validation['abrebiaturaeditar'],
+                );
+        }   
+        
+        $updateMat = new Materia();
+        $resultado= $updateMat->actualizarMateria($validation['idmateria'],$data,$validation['listagardoseditar'],$validation['idateriorgra']);    
+        
+        if($resultado){
+            
+            return back()->with('success','Se ha actualizado correctamente');
+        }
+        else
+        {
+            return back()->with('danger','No se ha actualizado correctamente');
+        }
     }
 
     public function Respuesta($id)

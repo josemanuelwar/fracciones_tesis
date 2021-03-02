@@ -1,6 +1,6 @@
 @include('layouts.Inicio')
 <div class="container-fluid">
-    <h1 class="mt-4" style="text-align: center;"> ! Biemvenido !</h1>
+    <h1 class="mt-4" style="text-align: center;"> ! Biemvenido {{auth ()->user()->nombre_usuario }} !</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item active">Menu</li>
     </ol>

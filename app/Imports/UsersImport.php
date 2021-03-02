@@ -21,6 +21,7 @@ class UsersImport implements ToModel
         $persona->apellido_paterno=$row[1];
         $persona->apellido_materno=$row[2];
         $persona->direccion=$row[3];
+        $persona->eliminarper=1;
         $persona->save();
         /** recuperamos el id de las persona insertadas */   
         $idpersona = Persona::latest('id')->first();

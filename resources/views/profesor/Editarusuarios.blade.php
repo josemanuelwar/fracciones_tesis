@@ -38,10 +38,10 @@
                     <select name="escuela" id="escuela" class="form-control">
                         @if($escuelas !== null)
                             @foreach($escuelas as $value)
-                                @if($alumnos[0]->escuelas_id == $value['id'])
-                                    <option value="$value['id']" select>{{$value['nombre_escuela']}}</option>
+                                @if($alumnos[0]->escuelas_id == $value->id)
+                                    <option value="{{$value->id}}" selected>{{$value->nombre_escuela}}</option>
                                 @else    
-                                    <option value="{{$value['id']}}">{{$value['nombre_escuela']}}</option>
+                                    <option value="{{$value->id}}">{{$value->nombre_escuela}}</option>
                                 @endif
                             @endforeach    
                         @else
@@ -60,7 +60,7 @@
                     <input type="password" class="form-control" id="exampleInputPassword1" name="password1" placeholder="Password" >
                     <!-- {!! $errors->first('password','<br><small id="appHelp" class="alert alert-danger">:message</small>')!!} -->
                 </div>
-                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="submit" class="btn btn-outline-primary">Enviar</button>
             </form>
         </div>
     </div>

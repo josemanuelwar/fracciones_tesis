@@ -1,38 +1,46 @@
-$(function() {
-   console.log("holas"); 
-});
+let Editar=(id)=>{
+    escuela(id);
+    $('#editarEscuela').show('swing');
 
-$( "#formulario_escuela" ).submit(function( event ) {
-    event.preventDefault();
-    let nombre=$("#escuela").val();
-    let direccion=$("#direccion").val();
-    if(nombre.trim() == null || nombre.trim().length == 0){
-        console.log("error");
-    }else if(direccion.trim() == null || direccion.trim().length == 0){
-        console.log("erro");
-    }else{
-        let json={
-            'nombre_escuela':nombre,
-            'direccion':direccion,
-            "_token": $("meta[name='csrf-token']").attr("content")
-        }
-        enviar(json);
-    }
-});
-
-let enviar=(json)=>{
-    let url=$('#formulario_escuela').attr('action');
-    let method=$('#formulario_escuela').attr('method');
-    $.ajax({
-        type: method,
-        url: url,
-        data: json,
-        dataType:'json',
-        success: function(item) {
-            console.log(item);
-        },
-        error:function (Error) {
-            console.log("error");
-        }
-      });
 }
+
+$('#close').click(function(){
+    $('#editarEscuela').hide('swing');
+});
+
+$('#close1').click(function(){
+    $('#editarEscuela').hide('swing');
+});
+
+let escuela=(id)=>{
+    $.ajax({
+        method:'GET',
+        url:'/GetEscuela/'+id,
+        dataType:'json',
+        success:function(item){
+            mostar(item);
+        },
+        error:function(error){
+            console.log(error);
+        }
+    });
+
+}
+let mostar=(data)=>{
+    $('#escuelaeditar').val(data.nombre_escuela);
+    $('#direccionediatra').val(data.direccion);
+    $('#idescuela').val(data.id);
+}
+
+let Eliminar=(id)=>{
+    $('#escuelaid').val(id);
+    $('#eliminarEscuela').show('swing');
+}
+
+$('#closeEliminar').click(function(){
+   $('#eliminarEscuela').hide('swing'); 
+});
+
+$('#closeEliminar1').click(function(){
+    $('#eliminarEscuela').hide('swing');
+});

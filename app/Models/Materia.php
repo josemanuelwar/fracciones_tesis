@@ -9,7 +9,7 @@ class Materia extends Model
 {
     use HasFactory;
     protected $fillable =[
-        'nombremateria','siglasmaterias'
+        'nombremateria','siglasmaterias','urlimagenmat','Eliminarmat'
     ];
 
     public function escuela()
@@ -26,7 +26,8 @@ class Materia extends Model
             ->join('materias_has_escuelas','materias.id','=','materias_has_escuelas.materias_id')
             ->join('escuelas','escuelas.id','=','materias_has_escuelas.escuelas_id')
             ->where('escuelas.id',$id)
-            ->select('materias.id','materias.nombremateria','materias.siglasmaterias','materias_has_grados.grados_id','grados.nombregrado')
+            ->where('Eliminarmat',1)
+            ->select('materias.id','materias.nombremateria','materias.siglasmaterias','materias.urlimagenmat','materias_has_grados.grados_id','grados.nombregrado')
             ->get();
         return $materia;    
     }

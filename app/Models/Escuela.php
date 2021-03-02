@@ -10,7 +10,9 @@ class Escuela extends Model
     use HasFactory;
     protected $fillabel=[
         'nombre_escuela',
-        'direccion'
+        'direccion',
+        'rutaimagen',
+        'Eliminar'
     ];
 
     public function Materia()

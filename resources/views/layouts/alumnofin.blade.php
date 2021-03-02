@@ -1,9 +1,13 @@
-</section>
-
-<footer>
-    <a href="http://www.cs.buap.mx/" target="_blank" rel="noopener noreferrer"><h1>Facultad de ciencias de la computacion buap</h1></a>
-    Desarrollado por jose manuel sanchez jaures para octener el titulo de ingenieria en ciencias de la computacion
+</div>
+<!-- Footer -->
+<footer class="bg-light text-center text-lg-start">
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      © Realizado por jose manuel Sanchez juarez
+    </div>
+    <!-- Copyright -->
 </footer>
+<!-- Footer -->
         
 </body>
 </html>

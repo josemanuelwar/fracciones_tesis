@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Persona;
@@ -9,12 +8,10 @@ use App\Models\Escuela;
 use App\Models\Materia;
 use App\Models\Tema;
 use App\Models\Pregunta;
-
-use App\Models\grado_primaria;
 use Illuminate\Support\Facades\Hash;
 use App\Imports\UsersImport;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Support\Facades\Storage;
 class HomeController extends Controller
 {
     /**
@@ -25,6 +22,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware(['auth','roles']);
+       
     }
 
 
@@ -59,7 +57,7 @@ class HomeController extends Controller
             'app' => 'required|max:60',
             'apm' => 'required|max:60',
             'direccion' => 'required|max:120',
-            // 'Escuela' => 'required|max:60',
+            'escuela' => 'required|max:60',
             'email' => 'required|max:60|email|unique:users',
             'password' => 'required|max:60|min:8',
             ]);
@@ -69,6 +67,7 @@ class HomeController extends Controller
             $persona->apellido_paterno=$request->post('app');
             $persona->apellido_materno=$request->post('apm');
             $persona->direccion=$request->post('direccion');
+            $persona->eliminarper=1;
             $persona->save();
             /** traemos el ultimo id que se genero en la insercion en la tabla personas */
             $idpersona = Persona::latest('id')->first();
@@ -80,50 +79,39 @@ class HomeController extends Controller
             $usuarios->roles_id = 3;
             $usuarios->personas_id = $idpersona['id'];
             $usuarios->users_id = auth()->user()->id;
-            $usuarios->escuelas_id=auth()->user()->escuelas_id;
+            $usuarios->escuelas_id=$request->post('escuela');;
             $usuarios->save();
             // $request->session()->flash('status', 'Task was successful!');
             return back()->with('success','Se ha registrado correctamente');
     }
-
+    /** inicio de los temarios*/
     public function Agregartemarios()
-    {
-        // dd($nivel);
-        return view('profesor.agregartemario');
-
-    }
-    /** mandamos la lista de grado que estan en la base de datos */
-    public function ListaGardosVue()
     {
         $lista=new Materia();
         $res=$lista->getMaterias(auth()->user()->escuelas_id);
-        return $res;
-        
-    }
-    /** mandamos los datos a la vista */
-    public function verListatemas()
-    {
-
         $temas=new Tema();
         $listatemas=$temas->getTemas(auth()->user()->escuelas_id);
-        return json_encode($listatemas);
+        return view('profesor.agregartemario')->with('materias',$res)->with('temas',$listatemas);
+
     }
+
     /** guarda mos los datos en la base de dats */
     public function guardarTemas(Request $request)
     {
         $validacion=$request->validate([
             'tema' => 'required|max:60',
-            'idgrado' => 'required|max:11',
-            'pregnum' => 'required|max:11'
+            'materia' => 'required|max:11',
+            'numero' => 'required|max:11',
+            'video'=>'required|mimetypes:video/avi,video/mpeg,video/mp4'
         ]);
-
         $temas=new Tema();
         $temas->nombre_tema=$validacion['tema'];
-        $temas->numerodepreguntas=$validacion['pregnum'];
-        $temas->materias_id=$validacion['idgrado'];
+        $temas->numerodepreguntas=$validacion['numero'];
+        $temas->materias_id=$validacion['materia'];
+        $temas->rutavideo=$request->file('video')->store('public/videos');
+        $temas->eliminartemas=1;
         $temas->save();
-
-        return json_encode(true);
+        return back()->with('success','Se ha registrado correctamente');
     }
    /** cargamos la vista  */
     public function preguntas(Request $request ,$id=null)
@@ -157,8 +145,11 @@ class HomeController extends Controller
             $personas=new Persona();
             $alumnos=$personas->ListaAlumnos(auth()->user()->id);
             return $alumnos;         
+        }else{
+            $personas=new Persona();
+            $alumnos=$personas->ListaAlumnos(auth()->user()->id);
         }
-        return view('profesor.Listausuarios');
+        return view('profesor.Listausuarios')->with('alumnos',$alumnos);
     }
     //cargamos el formulario editar de usuarios
     public function editarview(Request $request, $id)
@@ -166,7 +157,7 @@ class HomeController extends Controller
         $persona=new Persona();
         $alumnos=$persona->Alumnos($id);
         $escuela=new Escuela();
-        $todas=$escuela->get();
+        $todas=$escuela->where('Eliminar',1)->get();
         return view('profesor.Editarusuarios')->with('alumnos',$alumnos)->with('id',$id)
         ->with('escuelas',$todas);
     }
@@ -212,7 +203,6 @@ class HomeController extends Controller
         }else{
             return back()->with('message','Error en Actulizar los datos');
         }                  
-        // dd($datos);
     }
     
     /**
@@ -220,20 +210,32 @@ class HomeController extends Controller
      */
     public function EditarTema(Request $request)
     {
-        if($request->ajax()) 
-        {
+        
             $validacion=$request->validate([
                 'idtema'=>'required|max:60',
-                'tema'=>'required|max:60',
-                'idgardo'=>'required|max:60',
-                'numpreg'=>'required|max:60'
+                'temaeditar'=>'required|max:60',
+                'materiaeditar'=>'required|max:60',
+                'numeroeditar'=>'required|max:60'
             ]);
-            $data = array('nombre_tema' =>$validacion['tema'] ,
-                        'numerodepreguntas'=>$validacion['numpreg'],
-                    'materias_id'=>$validacion['idgardo']);
-             $resu=Tema::where('id',$validacion['idtema'])->update($data);
-            return json_encode($resu);
-        }        
+            if($request->hasFile('videoeditar'))
+            {
+                // Storage::delete($archivo->rutavideo);
+                $data = array('nombre_tema' =>$validacion['temaeditar'] ,
+                        'numerodepreguntas'=>$validacion['materiaeditar'],
+                    'materias_id'=>$validacion['numeroeditar'],
+                'rutavideo'=>$request->file('videoeditar')->store('public/videos'));
+            }else{
+                $data = array('nombre_tema' =>$validacion['temaeditar'] ,
+                        'numerodepreguntas'=>$validacion['materiaeditar'],
+                    'materias_id'=>$validacion['numeroeditar']);
+            }
+            $resu=Tema::where('id',$validacion['idtema'])->update($data);
+            if($resu){
+                return back()->with('success','Se ha gauradado correctamente');
+            }else{
+                return back()->with('danger','Se ha gauradado correctamente');
+            }
+                
     }
     /** guardamo las preguntas de los temas */
     public function GuardarPreguntas(Request $request)

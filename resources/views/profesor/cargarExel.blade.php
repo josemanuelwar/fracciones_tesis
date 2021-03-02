@@ -18,7 +18,7 @@
                     <label for="excel">Selecciona el archivo Exel</label>
                     <input type="file" class="form-control-file" id="excel" name="excel">
                 </div>
-                <input type="submit" value="Cargar">
+                <button type="submit" class="btn btn-outline-primary" title="Cargar Archivo exel">subir</button>
             </form>
         </div>
     </div>
