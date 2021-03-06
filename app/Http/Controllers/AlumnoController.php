@@ -21,7 +21,7 @@ class AlumnoController extends Controller
 
         $materias = new Materia();
         // dd($materias);
-        $resul=$materias->materiagrado();
+        $resul=$materias->materiagrado(auth()->user()->escuelas_id);
         return view('welcome')->with("materias",$resul);
     }
 

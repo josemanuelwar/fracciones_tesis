@@ -10,12 +10,12 @@
                 @csrf
                 @if(Session::has('message'))
                     <div class="alert alert-success alert-block">
-                        <button type="button" class="close" data-dismiss="alert">×</button>	
+                        <button type="button" class="close" data-dismiss="alert">×</button>
                             <strong>{{Session::get('message')}}</strong>
                     </div>
                 @endif
                 <div class="form-group">
-                    <label for="excel">Selecciona el archivo Exel</label>
+                    <label for="excel">Selecciona el archivo Exel <button type="button" id="archivoinfo" class="btn btn-info">Formato Archivo</button></label>
                     <input type="file" class="form-control-file" id="excel" name="excel">
                 </div>
                 <button type="submit" class="btn btn-outline-primary" title="Cargar Archivo exel">subir</button>
@@ -29,7 +29,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Formato del archivo de exel a cargar</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeinfo">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

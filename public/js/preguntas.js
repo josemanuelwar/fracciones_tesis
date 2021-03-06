@@ -8,25 +8,31 @@ window.addEventListener('load',function(){
     fetch(url,{
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),  
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         'Content-Type': 'application/json'
         // 'Content-Type': 'application/x-www-form-urlencoded',
         }
     }).then( response => response.json()).catch(error=>{
         console.log(error);
   }).then(response =>{
+    console.log(response);
       preguntas=response;
-    mostrapreguntas(i,j);
+      if (response.length !=0) {
+        mostrapreguntas(i,j);
+      }else{
+        document.getElementById('preguntas').innerHTML="<h1>No hay preguntas que mostrar</h1>";
+      }
+
 });
 let mostrapreguntas=(i,j)=>{
     let plantilla='<div><h5>Problema'+j+'</h5><p>'+preguntas[i].reactivo+'</p></div>';
     document.getElementById('preguntas').innerHTML=plantilla;
-    
+
     let url='/respuestas_ajax/'+preguntas[i].id;
     fetch(url,{
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),  
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         'Content-Type': 'application/json'
         // 'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -35,7 +41,7 @@ let mostrapreguntas=(i,j)=>{
     }).then(response =>{
        respuestas=response;
        mostrarrespuestas();
-    });    
+    });
 }
 
 let mostrarrespuestas=()=>{
@@ -45,7 +51,7 @@ let mostrarrespuestas=()=>{
         i++;
         return "<div><table><td>"+incisos[i]+" )<input type='radio' value='"+elemneto.id
         +"' name='respuesta'></td><td>"+elemneto.respuesta+"</td></table></div>";
-        
+
     });
     document.getElementById('respuesta').innerHTML=platilla;
     // console.log(platilla);
@@ -53,12 +59,12 @@ let mostrarrespuestas=()=>{
 
 let siguientes = document.getElementById('siguiente');
     siguientes.addEventListener('click',function(){
-        mostrapreguntas(i++,j++);        
+        mostrapreguntas(i++,j++);
     });
 
 let anterior = document.getElementById('anterior');
     anterior.addEventListener('click',function(){
         mostrapreguntas(i--,j--);
-    });    
+    });
 });
 

@@ -1,14 +1,8 @@
-</div>
-<!-- Footer -->
-<footer class="bg-light text-center text-lg-start">
-    <!-- Copyright -->
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      © Realizado por jose manuel Sanchez juarez
-    </div>
-    <!-- Copyright -->
+@include('chat.chat')
+<footer class="bg-white text-center text-black-50 py-3 shadow">
+       {{ config('app.name')}} | copyright @ {{date('Y')}}
 </footer>
-<!-- Footer -->
-        
+</div>
 </body>
 </html>
 <script src="{{asset('admin/js/jquery-3.5.1.js')}}" crossorigin="anonymous"></script>

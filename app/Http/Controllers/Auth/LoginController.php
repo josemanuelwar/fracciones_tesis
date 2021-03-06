@@ -27,7 +27,7 @@ class LoginController extends Controller
      */
 
 
-     protected $redirectTo = RouteServiceProvider::HOME;
+     // protected $redirectTo = RouteServiceProvider::'/';
 
     /**
      * Create a new controller instance.
@@ -44,19 +44,17 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
+    // sobre escribimos la funcion para redirigir al usuario dependeiendo el rol asignado
     public function redirectPath()
     {
         if (auth()->user()->roles_id === 1) {
             return '';
         }
         if(auth()->user()->roles_id === 2){
-            // dd(auth()->user()->roles_id);
             return '/profesor';
         }
         if (auth()->user()->roles_id === 3) {
             return '/alumnosinicio';
-            // dd(auth()->user()->roles_id);
         }
     }
 }

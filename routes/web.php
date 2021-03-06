@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-
+// ruta de login y de inicio
 Route::get('/',[App\Http\Controllers\Auth\LoginController::class, 'index'])->name('login');
-
+// ruta de la vista principal del los alumnos
 Route::get('/alumnosinicio',[App\Http\Controllers\AlumnoController::class, 'index'])->name('Inicio');
 Auth::routes();
 //ruta del home para el profesor

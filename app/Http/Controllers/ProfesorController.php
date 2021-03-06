@@ -9,16 +9,22 @@ use App\Models\Pregunta;
 use App\Models\Respuesta;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\CacheMaterias;
+use App\Repositories\CacheEscuela;
 class ProfesorController extends Controller
 {
-    public function __construct()
+    protected $materias;
+    protected $escuelas;
+    public function __construct(CacheMaterias $materia,CacheEscuela $escuela)
     {
+        $this->materias=$materia;
+        $this->escuelas=$escuela;
         $this->middleware(['auth','roles']);
     }
 
     public function index()
     {
-        $resultado=Escuela::where('Eliminar',1)->get();
+        $resultado=$this->escuelas->getEscuela();
         return view('profesor.registrarescuela')->with('Escuelas',$resultado);
     }
     /** registramos la escuela */
@@ -29,15 +35,9 @@ class ProfesorController extends Controller
             'direccion'=>'required|max:120',
             'imagen'=>'required|image'
         ]);
-        
-        $escuela=new Escuela();
-        $escuela->nombre_escuela=$validacion['escuela'];
-        $escuela->direccion=$validacion['direccion'];
-        $escuela->rutaimagen=$request->file('imagen')->store('public/escuela');
-        $escuela->Eliminar=1;
-        $escuela->save();
+        $url=$request->file('imagen')->store('public/escuela');
+        $this->escuelas->guardar($validacion,$url);
         return back()->with('success','Se ha guardado correctamente');
-        
     }
 
     /**asignamos la escuela */
@@ -50,10 +50,10 @@ class ProfesorController extends Controller
        $actulizar->save();
         return json_encode(true);
     }
-    //retornamos  la escuela 
+    //retornamos  la escuela
     public function getEscuela($id)
     {
-        return Escuela::find($id);
+        return $this->escuelas->getEscuelas($id);
     }
 
     /** actualizamos el registro de la escuela */
@@ -63,30 +63,25 @@ class ProfesorController extends Controller
         'idEscuela'=>'required|max:11',
         'escuelaeditar'=>'required|max:100',
         'direccionediatra'=>'required|max:120',
-        'imageneditar'=>'image'           
+        'imageneditar'=>'image'
        ]);
-       $escuela=new Escuela();
-       $actualizar=$escuela->find($validacion['idEscuela']);
-       $actualizar->nombre_escuela=$validacion['escuelaeditar'];
-       $actualizar->direccion=$validacion['direccionediatra'];
-       if( $request->hasFile('imageneditar')){
+        if( $request->hasFile('imageneditar')){
             Storage::delete($actualizar->rutaimagen);
-           $actualizar->rutaimagen=$request->file('imageneditar')->store('public/escuela');
+           $url=$request->file('imageneditar')->store('public/escuela');
+           $this->escuelas->actulizar($validacion,$url);
+       }else{
+           $this->escuelas->actulizarimagen($validacion);
        }
-       $actualizar->save();
+
        return back()->with('success','Se ha actualizado correctamente');
     }
 
     public function EliminarEscuela(Request $request)
     {
         $validacion=$request->validate([
-            'escuelaid'=>'required|max:11'         
+            'escuelaid'=>'required|max:11'
         ]);
-        $escuela=new Escuela();
-        $actualizar=$escuela->find($validacion['escuelaid']);
-        // dd($actualizar);
-        $actualizar->Eliminar=0;
-        $actualizar->save();
+        $this->escuelas->eliminar($validacion);
         return back()->with('success','Se ha eliminado correctamente');
     }
 
@@ -94,8 +89,8 @@ class ProfesorController extends Controller
     {
         $resultaad=Grado::get();
         $materia= new Materia();
-        $lista=$materia->getMaterias(auth()->user()->escuelas_id);
-       
+        $lista=$this->materias->getMaterias(auth()->user()->escuelas_id);
+
         return view('profesor.RegistrarMateria')->with('grados',$resultaad)
         ->with('lista',$lista);
     }
@@ -107,26 +102,20 @@ class ProfesorController extends Controller
         /** validamos que los campos son requeridos  */
         $validacion=$request->validate([
             'materia'=>'required|max:60',
-            'abrebiatura'=>'required|max:60', 
+            'abrebiatura'=>'required|max:60',
             'listagardos'  =>  'required|max:60',
             'imagen'=>'required|image'
            ]);
-    
-        /** creamos objetos de los modelos y guardamos los datos  */    
-        $materia=new Materia();
-        $materia->nombremateria=$validacion['materia'];
-        $materia->siglasmaterias = $validacion['abrebiatura'];
-        $materia->urlimagenmat=$request->file('imagen')->store('public/Materia');
-        $materia->Eliminarmat=1;
-        $materia->save();
-        $materiaid=Materia::latest('id')->first();
-
+        $url=$request->file('imagen')->store('public/Materia');
+        //llamamos las funcion de los repsitorios
+        $materiaid=$this->materias->getMaterias($validacion,$url);
         $escuelmatera = array('escuelas_id' => auth()->user()->escuelas_id,
                                'materias_id' => $materiaid['id']);
-                               
-        $res=DB::table('materias_has_escuelas')->insert($escuelmatera);
-        $res1=DB::table('materias_has_grados')->insert(["materias_id"=>$materiaid['id'],
-        "grados_id"=>$request->post('listagardos')]);
+        $gradomateria = array("materias_id"=>$materiaid['id'],
+        "grados_id"=>$request->post('listagardos'));
+        //funcion del reposcitorio
+        $res=$this->materia->materias_has_escuelas($escuelmatera);
+        $res1=$this->materia->materias_has_grados($gradomateria);
         if($res === true && $res1 === true){
             return back()->with('success','Se ha guardado correctamente');
         }
@@ -134,7 +123,7 @@ class ProfesorController extends Controller
         {
             return back()->with('danger','No se ha guardado correctamente');
         }
-            
+
     }
     /** mostramos todo las materias  que tiene un usuario */
     public function eliminarMaterias(Request $request)
@@ -142,10 +131,7 @@ class ProfesorController extends Controller
         $validation=$request->validate([
             'materiaid'=>'required|max:11',
         ]);
-        $mat=new Materia();
-        $elim=$mat->find($validation['materiaid']);
-        $elim->Eliminarmat=0;
-        $elim->save();
+        $this->materia->Eliminar($validation);
         return back()->with('success','Se ha eliminado correctamente');
     }
     /**
@@ -161,9 +147,9 @@ class ProfesorController extends Controller
             'abrebiaturaeditar'=>'required|max:60',
             'listagardoseditar'=>'required|max:11',
             'idateriorgra'=>'required|max:11',
-            'imageneditar'=>'image',                 
+            'imageneditar'=>'image',
            ]);
-        
+
         if($request->hasFile('imageneditar')){
             $mat=new Materia();
             $elim=$mat->find($validation['idmateria']);
@@ -176,13 +162,9 @@ class ProfesorController extends Controller
             $data = array('nombremateria' => $validation['materiaeditar'],
                       'siglasmaterias'=>$validation['abrebiaturaeditar'],
                 );
-        }   
-        
-        $updateMat = new Materia();
-        $resultado= $updateMat->actualizarMateria($validation['idmateria'],$data,$validation['listagardoseditar'],$validation['idateriorgra']);    
-        
+        }
+        $resultado= $this->materia->Actualizar($validation['idmateria'],$data,$validation['listagardoseditar'],$validation['idateriorgra']);
         if($resultado){
-            
             return back()->with('success','Se ha actualizado correctamente');
         }
         else
@@ -193,7 +175,7 @@ class ProfesorController extends Controller
 
     public function Respuesta($id)
     {
-        $res=Pregunta::where('id',$id)->get();        
+        $res=Pregunta::where('id',$id)->get();
         return view("profesor.agregarRespuesta")->with('pregunta',$res);
     }
 
@@ -211,7 +193,7 @@ class ProfesorController extends Controller
                 $res=Respuesta::create([ 'respuesta'=>$res,
                                     'corecta'=>$correcta[$i],
                                     'preguntas_id'=>$validation['idpregunta']]);
-                $i++;                    
+                $i++;
             }
         }
         return response()->Json(true);
@@ -219,15 +201,15 @@ class ProfesorController extends Controller
 
     public function vistaprevia($id)
     {
-        $res=Pregunta::where('id',$id)->get(); 
+        $res=Pregunta::where('id',$id)->get();
         $resp=Respuesta::where('preguntas_id',$id)->get();
-        $inciso=['A','B','C','D'];  
+        $inciso=['A','B','C','D'];
         return view('profesor.Vistaprevia')->with('vista',$res)->with('respuesta',$resp)->with('inciso',$inciso);
     }
 
     public function Editarpregunta($id)
     {
-        $res=Pregunta::where('id',$id)->get(); 
+        $res=Pregunta::where('id',$id)->get();
         $resp=Respuesta::where('preguntas_id',$id)->get();
         return view('profesor.EditarPregun')->with('pregunta',$res)
                 ->with('respuestas',$resp);
@@ -253,7 +235,7 @@ class ProfesorController extends Controller
             $update->corecta=$corecta[0];
             $update->preguntas_id=$preguntas['idpregunta'];
             $update->save();
-            
+
             $update=$res->find($respuesta['idrespuestaB']);
             $update->respuesta=$respuesta['respuestaB'];
             $update->corecta=$corecta[1];
@@ -270,7 +252,7 @@ class ProfesorController extends Controller
             $update->respuesta=$respuesta['respuestaD'];
             $update->corecta=$corecta[3];
             $update->preguntas_id=$preguntas['idpregunta'];
-            $update->save();       
-        return response()->Json(true);        
+            $update->save();
+        return response()->Json(true);
     }
 }
