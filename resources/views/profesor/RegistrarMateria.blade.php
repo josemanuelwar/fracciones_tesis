@@ -73,7 +73,6 @@
                                     <td>No hay portada </td>
                                 @endif
                                 <td>
-                                    <button class="btn btn-outline-success">Asignar</button>
                                     <button title="Editar Materia" class="btn btn-outline-primary" onclick="editar({{$item->id}},'{{$item->nombremateria}}','{{$item->siglasmaterias}}',{{$item->grados_id}},'{{$item->urlimagenmat}}');"><i class="fa fa-edit"></i></button>
                                     <button title="Eliminar Materia" class="btn btn-outline-danger" onclick="eliminar({{$item->id}},);">x</button>
                                 </td>

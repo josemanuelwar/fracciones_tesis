@@ -44,3 +44,17 @@ $('#closeEliminar').click(function(){
 $('#closeEliminar1').click(function(){
     $('#eliminarEscuela').hide('swing');
 });
+
+let asignar=(id)=>{
+    $.ajax({
+        method:'GET',
+        url:'/AsignarEscuela/'+id,
+        dataType:'json',
+        success:function(item){
+            mostar(item);
+        },
+        error:function(error){
+            console.log(error);
+        }
+    });
+}

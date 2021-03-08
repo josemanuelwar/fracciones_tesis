@@ -1,24 +1,24 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\Escuela;
-use App\Models\User;
 use App\Models\Materia;
 use App\Models\Grado;
 use App\Models\Pregunta;
 use App\Models\Respuesta;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\CacheMaterias;
 use App\Repositories\CacheEscuela;
+use App\Repositories\CaheUsuario;
 class ProfesorController extends Controller
 {
     protected $materias;
     protected $escuelas;
-    public function __construct(CacheMaterias $materia,CacheEscuela $escuela)
+    protected $usuarios;
+    public function __construct(CacheMaterias $materia,CacheEscuela $escuela,CaheUsuario $usuario)
     {
         $this->materias=$materia;
         $this->escuelas=$escuela;
+        $this->usuarios=$usuario;
         $this->middleware(['auth','roles']);
     }
 
@@ -43,11 +43,7 @@ class ProfesorController extends Controller
     /**asignamos la escuela */
     public function AsignacionEscuela($id)
     {
-       $usuarios = new User();
-
-       $actulizar=$usuarios->find(auth()->user()->id);
-       $actulizar->escuelas_id=$id;
-       $actulizar->save();
+      $this->usuarios->AsignacioEscuela(auth()->user()->id, $id);
         return json_encode(true);
     }
     //retornamos  la escuela
@@ -88,9 +84,7 @@ class ProfesorController extends Controller
     public function Matreria(Request $request)
     {
         $resultaad=Grado::get();
-        $materia= new Materia();
         $lista=$this->materias->getMaterias(auth()->user()->escuelas_id);
-
         return view('profesor.RegistrarMateria')->with('grados',$resultaad)
         ->with('lista',$lista);
     }
@@ -108,14 +102,14 @@ class ProfesorController extends Controller
            ]);
         $url=$request->file('imagen')->store('public/Materia');
         //llamamos las funcion de los repsitorios
-        $materiaid=$this->materias->getMaterias($validacion,$url);
+        $materiaid=$this->materias->guardar($validacion,$url);
         $escuelmatera = array('escuelas_id' => auth()->user()->escuelas_id,
                                'materias_id' => $materiaid['id']);
         $gradomateria = array("materias_id"=>$materiaid['id'],
         "grados_id"=>$request->post('listagardos'));
         //funcion del reposcitorio
-        $res=$this->materia->materias_has_escuelas($escuelmatera);
-        $res1=$this->materia->materias_has_grados($gradomateria);
+        $res=$this->materias->materias_has_escuelas($escuelmatera);
+        $res1=$this->materias->materias_has_grados($gradomateria);
         if($res === true && $res1 === true){
             return back()->with('success','Se ha guardado correctamente');
         }
@@ -163,7 +157,7 @@ class ProfesorController extends Controller
                       'siglasmaterias'=>$validation['abrebiaturaeditar'],
                 );
         }
-        $resultado= $this->materia->Actualizar($validation['idmateria'],$data,$validation['listagardoseditar'],$validation['idateriorgra']);
+        $resultado= $this->materias->Actualizar($validation['idmateria'],$data,$validation['listagardoseditar'],$validation['idateriorgra']);
         if($resultado){
             return back()->with('success','Se ha actualizado correctamente');
         }

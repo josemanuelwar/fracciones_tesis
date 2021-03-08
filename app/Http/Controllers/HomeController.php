@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Persona;
-use App\Models\Escuela;
-use App\Models\Materia;
 use App\Models\Tema;
 use App\Models\Pregunta;
-use Illuminate\Support\Facades\Hash;
 use App\Imports\UsersImport;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
+use App\Repositories\CacheEscuela;
+use App\Repositories\CacheMaterias;
+use App\Repositories\CahePersonas;
+use App\Repositories\CaheUsuario;
 class HomeController extends Controller
 {
     /**
@@ -19,8 +17,16 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $escuela;
+    protected $materia;
+    protected $persona;
+    protected $usuario;
+    public function __construct(CacheEscuela $escuelas, CacheMaterias $materias, CahePersonas $pesonas, CaheUsuario $usuarios)
     {
+        $this->escuela=$escuelas;
+        $this->materia=$materias;
+        $this->persona=$pesonas;
+        $this->usuario=$usuarios;
         $this->middleware(['auth','roles']);
        
     }
@@ -41,8 +47,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function registroAlumnos(){
-        $escuela=new Escuela();
-        $todas=$escuela->get();
+        $todas=$this->escuela->getEscuela();
         return view('profesor.regiAlumnos')->with("escuela",$todas);
     }
     /**
@@ -60,35 +65,16 @@ class HomeController extends Controller
             'escuela' => 'required|max:60',
             'email' => 'required|max:60|email|unique:users',
             'password' => 'required|max:60|min:8',
-            ]);
-            /*** gaurdamos en la tabla personas */
-            $persona=new Persona();
-            $persona->nombrecompleto=$request->post('nombre');
-            $persona->apellido_paterno=$request->post('app');
-            $persona->apellido_materno=$request->post('apm');
-            $persona->direccion=$request->post('direccion');
-            $persona->eliminarper=1;
-            $persona->save();
+        ]);
             /** traemos el ultimo id que se genero en la insercion en la tabla personas */
-            $idpersona = Persona::latest('id')->first();
-            /**guardamos en la tabla usuarios */
-            $usuarios = new User();
-            $usuarios->nombre_usuario = $request->post('nombre');
-            $usuarios->email = $request->post('email');
-            $usuarios->password = Hash::make($request->post('password'));
-            $usuarios->roles_id = 3;
-            $usuarios->personas_id = $idpersona['id'];
-            $usuarios->users_id = auth()->user()->id;
-            $usuarios->escuelas_id=$request->post('escuela');;
-            $usuarios->save();
-            // $request->session()->flash('status', 'Task was successful!');
+            $idpersona=$this->persona->Guardarpersonas($validacion);
+            $this->usuario->gauradarUsuario($validacion,$idpersona);
             return back()->with('success','Se ha registrado correctamente');
     }
     /** inicio de los temarios*/
     public function Agregartemarios()
     {
-        $lista=new Materia();
-        $res=$lista->getMaterias(auth()->user()->escuelas_id);
+        $res=$this->materia->getMaterias(auth()->user()->escuelas_id);
         $temas=new Tema();
         $listatemas=$temas->getTemas(auth()->user()->escuelas_id);
         return view('profesor.agregartemario')->with('materias',$res)->with('temas',$listatemas);
@@ -142,22 +128,18 @@ class HomeController extends Controller
     {
         if($request->ajax()) 
         {
-            $personas=new Persona();
-            $alumnos=$personas->ListaAlumnos(auth()->user()->id);
+            $alumnos=$this->persona->paginacionAlumnos(auth()->user()->id);
             return $alumnos;         
         }else{
-            $personas=new Persona();
-            $alumnos=$personas->ListaAlumnos(auth()->user()->id);
+            $alumnos=$alumnos=$this->persona->paginacionAlumnos(auth()->user()->id);
         }
         return view('profesor.Listausuarios')->with('alumnos',$alumnos);
     }
     //cargamos el formulario editar de usuarios
     public function editarview(Request $request, $id)
     {
-        $persona=new Persona();
-        $alumnos=$persona->Alumnos($id);
-        $escuela=new Escuela();
-        $todas=$escuela->where('Eliminar',1)->get();
+        $alumnos=$this->persona->getpersonas($id);
+        $todas=$this->escuela->getEscuela();
         return view('profesor.Editarusuarios')->with('alumnos',$alumnos)->with('id',$id)
         ->with('escuelas',$todas);
     }
@@ -196,8 +178,7 @@ class HomeController extends Controller
         }    
 
         $id=$request->post('id');
-        $persona=new Persona(); 
-        $update=$persona->actualizarAlumno($datos,$id,$data); 
+        $update=$this->persona->actualizarpersonas($datos,$id,$data); 
         if($update){
             return back()->with('success','Datos Actulizados correctamente');
         }else{

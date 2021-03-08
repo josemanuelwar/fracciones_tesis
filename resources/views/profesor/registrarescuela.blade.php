@@ -55,7 +55,7 @@
                                           @endif
                                           
                                           <td>
-                                              <button class="btn btn-outline-success" onclick="Asiganar({{$item->id}});">Asignar</button>
+                                              <button class="btn btn-outline-success" onclick="asignar({{$item->id}});">Asignar</button>
                                             <button title="Editar escuela" class="btn btn-outline-primary" onclick="Editar({{$item->id}});"><i class="fa fa-edit"></i></button>
                                             <button title="Eliminar escuela" class="btn btn-outline-danger" onclick="Eliminar({{$item->id}});">x</button>
                                           </td>

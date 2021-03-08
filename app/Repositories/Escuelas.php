@@ -4,11 +4,6 @@ use App\Models\Escuela;
 use Illuminate\Support\Facades\DB;
 class Escuelas implements InterfaceEscuela
 {
-
-	// function __construct(argument)
-	// {
-	// 	# code...
-	// }
 	public function getEscuela(){
 		return Escuela::where('Eliminar',1)->paginate(2);
 	}
@@ -16,7 +11,7 @@ class Escuelas implements InterfaceEscuela
 	public function getEscuelas($id){
 		return Escuela::find($id);
 	}
-
+        
 	public function guardar($validacion,$url){
             $escuela=new Escuela();
             $escuela->nombre_escuela=$validacion['escuela'];

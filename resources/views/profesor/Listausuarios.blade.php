@@ -54,6 +54,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                <div class="d-felx justify-content-center">
+                    {!! $alumnos->links() !!}
+                </div>
             </div>        
             </div>
         </div>
